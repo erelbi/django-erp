@@ -1,0 +1,168 @@
+
+
+
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .full-screen-input {
+        width: 100%;
+        display: flex;
+    }
+    .full-screen-input input {
+        flex: 1;
+    }
+    .full-screen-input button {
+        margin-left: 10px;
+    }
+</style>
+</head>
+<style>
+
+    #message {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 16px;
+    }
+    
+    .alert {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+    
+    .alert.success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .alert.error {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    
+    .alert.info {
+        background-color: #cce5ff;
+        color: #004085;
+    }
+    
+    .alert.warning {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    </style>
+
+
+<main>
+    <div class="container-fluid">
+        <br>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+            <li class="breadcrumb-item active">Customer Create</li>
+        </ol>
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="card shadow-lg border-0 rounded-lg mt-12">
+                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Customer Create</h3></div>
+                    <div class="card-body">
+                        <div id="message"></div>
+                        <form id="musteriForm">
+                            {% csrf_token %}
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-6 mb-md-0">
+                                        <input class="form-control"id="musteri_adi" name="musteri_adi" type="text" placeholder="Enter your first name" />
+                                        <label for="inputFirstName">Customer name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input class="form-control" id="musteri_kodu" type="text" placeholder="Enter your last name" />
+                                        <label for="inputLastName">Customer Code</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="adres" type="text" placeholder="name@example.com" />
+                                <label for="inputEmail">Address </label>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3 mb-md-0">
+                                     
+                                            <input class="form-control" id="email" type="email" placeholder="name@example.com" />
+                                            <label for="inputEmail">Email address</label>
+                                      
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3 mb-md-0">
+                                        <input class="form-control" id="telefon" type="phone" placeholder="name@example.com" />
+                                        <label for="inputEmail">Phone</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 mb-0">
+                                <div class="d-grid"> <button class="btn btn-primary btn-block" type="submit" class="btn">Save</button></div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center py-3">
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+
+ 
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+<script src="/static/assets/js/datatables-simple-demo.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#musteriForm').on('submit', function(event) {
+            event.preventDefault();
+            var csrftoken = $('[name=csrfmiddlewaretoken]').val();
+            $.ajax({
+                url: '{% url "musteri_kayit_ajax" %}',
+                type: 'POST',
+                headers: { 'X-CSRFToken': csrftoken },
+                data: {
+                    'musteri_adi': $('#musteri_adi').val(),
+                    'musteri_kodu': $('#musteri_kodu').val(),
+                    'adres': $('#adres').val(),
+                    'telefon': $('#telefon').val(),
+                    'email': $('#email').val()
+                },
+                success: function(response) {
+                    $('#message').html('<div class="alert ' + (response.success ? 'success' : 'error') + '">' + response.message + '</div>');
+                    if (response.success) {
+                        $('#musteriForm')[0].reset();
+                    }
+                },
+                error: function(response) {
+                    $('#message').html('<div class="alert error">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                }
+            });
+        });
+    });
+</script>
+
+
+{% endblock javascripts %}

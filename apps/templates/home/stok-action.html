@@ -1,0 +1,253 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<head>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            .full-screen-input {
+                width: 100%;
+                display: flex;
+            }
+            .full-screen-input input {
+                flex: 1;
+            }
+            .full-screen-input button {
+                margin-left: 10px;
+            }
+        </style>
+        </head>
+
+            
+            <main>
+                <br>
+                <div class="container-fluid">
+                    
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Stok Export</li>
+                    </ol>
+
+
+                    <div id="accordion">
+                        <div class="card">
+                          <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                              <button class="btn btn-link" data-toggle="collapse" data-target="#collapseSac" aria-expanded="true" aria-controls="collapseOne">
+                                Saç
+                              </button>
+                            </h5>
+                          </div>
+                      
+                          <div id="collapseSac" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                <table id="datatablesSimple">
+                                    <thead>
+                                        <tr>
+                                            <th>Firma</th>
+                                            <th>Proje</th>
+                                            <th>Durum</th>
+                                            <th>Adet</th>
+                                            <th>Kalınlık</th>
+                                            <th>En</th>
+                                            <th>Boy</th>
+                                            <th>Çıkış Tarihi</th>
+                                            <th>Açıklama</th>
+                                            <th>Stok Kodu</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Firma</th>
+                                            <th>Proje</th>
+                                            <th>Durum</th>
+                                            <th>Adet</th>
+                                            <th>Kalınlık</th>
+                                            <th>En</th>
+                                            <th>Boy</th>
+                                            <th>Çıkış Tarihi</th>
+                                            <th>Açıklama</th>
+                                            <th>Stok Kodu</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        <tr>
+                                            <td>Mengenler</td>
+                                            <td>Mercedes Helezon</td>
+                                            <th>Çıkış</th>
+                                            <th>6</th>
+                                            <td>0.20m</td>
+                                            <td>2.10m</td>
+                                            <td>1.20m</td>
+                                            <td>2024/06/15</td>
+                                            <td>Müşteri Kendisi Teslim Aldı</td>
+                                            <td>STK26543165</td>
+            
+                                        </tr>
+                                        <tr>
+                                            <td>THK</td>
+                                            <td>Uçak Kanadı</td>
+                                            <th>Giriş</th>
+                                            <th>8</th>
+                                            <td>0.20m</td>
+                                            <td>2.10m</td>
+                                            <td>1.20m</td>
+                                            <td>2024/07/15</td>
+                                            <td>Kargo Firmasında</td>
+                                            <td>STK26546565</td>
+            
+                                        </tr>
+                                       
+                                    </tbody>
+                                </table>
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                              <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseBoya" aria-expanded="false" aria-controls="collapseOne">
+                                  Boya
+                                </button>
+                              </h5>
+                            </div>
+                        
+                            <div id="collapseBoya" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
+                              <div class="card-body">
+                                
+                              </div>
+                            </div>
+                          </div>
+                        <div class="card">
+                          <div class="card-header" id="headingTwo">
+                            <h5 class="mb-0">
+                              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseYatak" aria-expanded="false" aria-controls="collapseTwo">
+                                Yatak
+                              </button>
+                            </h5>
+                          </div>
+                          <div id="collapseYatak" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                            <div class="card-body">
+                              Yatak
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <div class="card-header" id="headingThree">
+                            <h5 class="mb-0">
+                              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsemotor" aria-expanded="false" aria-controls="collapseThree">
+                                Motor Redüktör
+                              </button>
+                            </h5>
+                          </div>
+                          <div id="collapsemotor" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                            <div class="card-body">
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingThree">
+                              <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseprofil" aria-expanded="false" aria-controls="collapseThree">
+                                  Profil
+                                </button>
+                              </h5>
+                            </div>
+                            <div id="collapseprofil" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                              <div class="card-body">
+                                Profil
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                      <div class="card">
+                        <div class="card-header" id="headingThree">
+                          <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseislem" aria-expanded="false" aria-controls="collapseThree">
+                              İşlem Parçaları
+                            </button>
+                          </h5>
+                        </div>
+                        <div id="collapseislem" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                          <div class="card-body">
+                            
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card">
+                        <div class="card-header" id="headingThree">
+                          <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseteknolojik" aria-expanded="false" aria-controls="collapseThree">
+                              Teknolojik Alım
+                            </button>
+                          </h5>
+                        </div>
+                        <div id="collapseteknolojik" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                          <div class="card-body">
+                          </div>
+                        </div>
+                      </div>
+                    
+
+                </div>
+            </main>
+      
+    
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+    
+        <script>
+            $(document).ready(function() {
+                var currentCell;
+
+                // Her hücreye tıklanabilirliği ekleyin
+                $(".editable").click(function() {
+                    currentCell = $(this);
+                    $("#modalInput").val(currentCell.text());
+                    $("#editModal").modal("show");
+                });
+
+                // Değişiklikleri kaydetme
+                $("#saveBtn").click(function() {
+                    var newValue = $("#modalInput").val();
+                    currentCell.text(newValue);
+                    $("#editModal").modal("hide");
+
+                    // Güncellenen veriyi sunucuya göndermek için AJAX kullanabilirsiniz
+                    // $.ajax({
+                    //     url: "/update-cell",
+                    //     method: "POST",
+                    //     data: {
+                    //         column: currentCell.index(),
+                    //         row: currentCell.closest("tr").index(),
+                    //         value: newValue
+                    //     },
+                    //     success: function(response) {
+                    //         console.log("Başarıyla güncellendi!");
+                    //     }
+                    // });
+                });
+            });
+            </script>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+    <script src="/static/assets/js/datatables-simple-demo.js"></script>
+
+{% endblock javascripts %}
