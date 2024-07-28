@@ -22,6 +22,13 @@ urlpatterns = [
     path('motor-kayit-ajax', views.motor_kayit_ajax, name='motor_kayit_ajax'),
     path('profil-kayit-ajax', views.profil_kayit_ajax, name='profil_kayit_ajax'),
     path('isleme-kayit-ajax', views.isleme_kayit_ajax, name='isleme_kayit_ajax'),
+    path('ajax/search-stok-kodu/', views.search_stok_kodu, name='search_stok_kodu'),
+    path('update_stock', views.update_stock, name='update_stock'),
+    path('stok-action',views.depo_actions,name='depo_action'),
+    path('chart-data-action/', views.get_chart_data_action, name='chart_data'),
+    path('totals-chart-data/', views.get_totals_chart_data, name='totals_chart_data'),
+    path('api/consolidated-data/', views.fetch_consolidated_data, name='fetch_consolidated_data'),
+    path('logs', views.logshow, name='logs'),
 
 
     # Matches any html file

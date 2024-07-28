@@ -44,62 +44,38 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-table me-1"></i>
-                    DataTable Example
+                    Kullanıcı Logları
                 </div>
                 <div class="card-body">
-                    <table id="datatablesSimple">
+                    <table id="de">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Action</th>
-                                <th>Start date</th>
-                                <th>Warehouse</th>
-                                <th>Product</th>
+                                <th>Aksiyon</th>
+                                <th>Table</th>
+                                <th>Kullanıcı</th>
+                                <th>Zaman Damgası</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>Name</th>
-                                <th>Action</th>
-                                <th>Start date</th>
-                                <th>Warehouse</th>
-                                <th>Product</th>
+                                <th>Aksiyon</th>
+                                <th>Table</th>
+                                <th>Kullanıcı</th>
+                                <th>Zaman Damgası</th>
+                                
                             </tr>
                         </tfoot>
                         <tbody>
-                            <tr>
-                                <td>Yasar</td>
-                                <td>Customer Edit</td>
-                                <td>2015/04/25</td>
-                                <td></td>
-                                <td></td>
-
-                            </tr>
-                            <tr>
-                                <td>Yasar</td>
-                                <td>Customer Save</td>
-                                <td>2011/04/25</td>
-                                <td></td>
-                                <td></td>
-
-                            </tr>
-                            <tr>
-                                <td>Yasar</td>
-                                <td>Warehouse Inport</td>
-                                <td>2024/04/25</td>
-                                <td>Sac Depo</td>
-                                <td>STM Sac</td>
-
-                            </tr>
-                            <tr>
-                                <td>Yasar</td>
-                                <td>Warehouse Export</td>
-                                <td>2024/06/25</td>
-                                <td>Sac Depo</td>
-                                <td>STM Sac</td>
-
-                            </tr>
-
+                            <tbody>
+                                {% for item in log %}
+                                <tr>
+                                    <td>{{ item.action|default:"-" }}</td>
+                                    <td>{{ item.table_name|default:"-" }}</td>
+                                    <td>{{ item.username|default:"-" }}</td>
+                                    <td>{{ item.timestamp|default:"-" }}</td>
+                                </tr>
+                              {% endfor %}
+                                 
                         </tbody>
                     </table>
                 </div>
@@ -107,6 +83,19 @@
         </div>
     </main>
 
+
+
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    
+    <script>
+    $(document).ready(function() {
+        $('#de').DataTable();
+    });
+    </script>
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->

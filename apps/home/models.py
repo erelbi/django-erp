@@ -5,6 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 import uuid
@@ -267,3 +268,24 @@ class TeknolojikAlim(models.Model):
 
     def __str__(self):
         return self.stok_kodu
+    
+
+
+
+
+
+
+class Log(models.Model):
+    ACTION_CHOICES = [
+        ('create', 'Create'),
+        ('update', 'Update'),
+        ('delete', 'Delete'),
+    ]
+
+    action = models.CharField(max_length=6, choices=ACTION_CHOICES)
+    table_name = models.CharField(max_length=255)
+    username = models.CharField(max_length=150, null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.username} {self.action} {self.table_name} at {self.timestamp}"

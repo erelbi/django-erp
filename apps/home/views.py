@@ -10,16 +10,68 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
-from .models import MusteriKayit
+from .models import MusteriKayit,Sac,Boya, Yatak, MotorReduktor, Profil, Isleme, TeknolojikAlim,Log
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from .forms import MusteriKayitForm,SacForm,BoyaForm,YatakForm,MotorForm,ProfilForm,IslemeForm,TeknolojiForm
+from django.db.models import Sum
+
+
+def fetch_consolidated_data(request):
+    data = []
+    models = [
+        (MusteriKayit, 'MusteriKayit'),
+        (Sac, 'Sac'),
+        (Boya, 'Boya'),
+        (Yatak, 'Yatak'),
+        (MotorReduktor, 'MotorReduktor'),
+        (Profil, 'Profil'),
+        (Isleme, 'Isleme'),
+        (TeknolojikAlim, 'TeknolojikAlim')
+    ]
+    
+    for model, table_name in models:
+        try:
+            # Dinamik olarak mevcut alanları kontrol et
+            fields = model._meta.get_fields()
+            field_names = [field.name for field in fields]
+            
+            # `proje_kodu` alanının gerekli olduğunu varsayarak, sadece bu alanın mevcut olduğu modelleri ele al
+            if 'projekodu' in field_names:  # ForeignKey'nin `projekodu` ile alındığını varsayıyoruz
+                # Veri çekme işlemi
+                columns = [
+                    'projekodu' if 'projekodu' in field_names else None,
+                    'stok_kodu' if 'stok_kodu' in field_names else None,
+                    'musteri' if 'musteri' in field_names else None
+                ]
+                columns = [col for col in columns if col is not None]  # None olanları kaldır
+
+                # İlişkili projelerle veri çekme
+                table_data = model.objects.all().select_related('projekodu').values(*columns)
+
+                # Null değerleri kaldır
+                for item in table_data:
+                    clean_item = {
+                        'tablo': table_name,
+                        'proje_kodu': item.get('projekodu', 'N/A'),  # ForeignKey'den veri çekiyoruz
+                        'stok_kodu': item.get('stok_kodu', 'N/A'),
+                        'musteri': item.get('musteri', 'N/A'),
+                    }
+                    data.append(clean_item)
+                    
+        except Exception as model_err:
+            print(f"Error fetching data from {table_name}: {model_err}")
+            continue
+    
+    return JsonResponse(data, safe=False)
 
 
 @login_required(login_url="/login/")
 def index(request):
+    
     context = {'segment': 'index'}
+   
 
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
@@ -35,7 +87,6 @@ def index(request):
 def musteri_kayit_ajax(request):
     if request.method == 'POST':
         form = MusteriKayitForm(request.POST)
-        print(form)
         proje_kodu = request.POST.get('proje_kodu')
         if MusteriKayit.objects.filter(proje_kodu=proje_kodu).exists():
             return JsonResponse({'success': False, 'message': ' Proje kodu benzersiz olmalıdır.'})
@@ -304,3 +355,259 @@ def isleme_kayit_ajax(request):
             print(form.errors)
             return JsonResponse({'success': False, 'message': 'Form geçersiz. Lütfen tüm alanları doğru doldurun.'})
     return JsonResponse({'success': False, 'message': 'Geçersiz istek.'})
+
+#def search_stok_kodu(request):
+#    query = request.GET.get('query', '')
+#    results = list(Sac.objects.filter(stok_kodu__startswith=query).values('stok_kodu', 'projekodu__proje_kodu', 'musteri'))
+#    print(results)
+#    return JsonResponse({'results': results})
+@csrf_exempt
+def search_stok_kodu(request):
+    query = request.GET.get('query', '')
+    
+    results = []
+
+    models = [
+        (Sac, 'Sac'),
+        (Boya, 'Boya'),
+        (Yatak, 'Yatak'),
+        (MotorReduktor, 'MotorReduktor'),
+        (Profil, 'Profil'),
+        (Isleme, 'Isleme'),
+        (TeknolojikAlim, 'TeknolojikAlim')
+    ]
+    
+    for model, table_name in models:
+        model_results = model.objects.filter(stok_kodu__startswith=query).values('stok_kodu', 'projekodu__proje_kodu', 'musteri', 'adet', 'id','depo_secimi')
+        for result in model_results:
+            result['table'] = table_name
+        results.extend(model_results)
+
+    return JsonResponse({'results': results})
+
+@csrf_exempt
+def update_stock(request):
+    if request.method == 'POST':
+        print(request.POST)
+        # Formdan veri al
+        stok_kodu = request.POST.get('stok_kodu')
+        son_edit_tarih = request.POST.get('son_edit_tarih')
+        cikis_aciklama = request.POST.get('cikis_aciklama')
+        cikis_adeti = int(request.POST.get('cikis_adeti'))
+        tablo = request.POST.get('tablo')
+
+        # Tablo seçimine göre uygun modeli seç
+        model_map = {
+            'Sac': Sac,
+            'Boya': Boya,
+            'Yatak': Yatak,
+            'MotorReduktor': MotorReduktor,
+            'Profil': Profil,
+            'Isleme': Isleme,
+            'TeknolojikAlim': TeknolojikAlim,
+        }
+
+        if tablo in model_map:
+            model = model_map[tablo]
+            try:
+                # Stok kodunu bul
+                instance = model.objects.get(stok_kodu=stok_kodu)
+                
+                # Adet değerinden çıkış adedini düş
+                if instance.adet >= cikis_adeti:
+                    instance.adet -= cikis_adeti
+                    instance.son_edit_tarih = son_edit_tarih
+                    instance.updated_by =  request.user
+                    instance.save()
+                    return JsonResponse({'status': 'success', 'message': 'Stok güncellendi!'})
+                else:
+                    return JsonResponse({'status': 'error', 'message': 'Yetersiz stok!'})
+
+            except model.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Stok kodu bulunamadı!'})
+
+        return JsonResponse({'status': 'error', 'message': 'Geçersiz tablo adı!'})
+
+    return JsonResponse({'status': 'error', 'message': 'Geçersiz istek!'})
+
+
+    
+@csrf_exempt
+@login_required(login_url="/login/")
+def depo_actions(request):
+    try:
+        # Veri setlerini alın, select_related kullanarak foreign key ile ilişkili verileri de yükleyin
+        sac_data = list(Sac.objects.select_related('projekodu').all().values(
+            'musteri',
+            'projekodu__proje_kodu',
+            'stok_kodu',
+            'adet',
+            'depo_secimi',
+            'olusturma_tarih',
+            'son_edit_tarih',
+            'giris_aciklama',
+            'cikis_aciklama'
+        ))
+        boya_data = list(Boya.objects.select_related('projekodu').all().values(
+            'musteri',
+            'projekodu__proje_kodu',
+            'stok_kodu',
+            'adet',
+            'depo_secimi',
+            'olusturma_tarih',
+            'son_edit_tarih',
+            'giris_aciklama',
+            'cikis_aciklama'
+        ))
+        yatak_data = list(Yatak.objects.select_related('projekodu').all().values(
+            'musteri',
+            'projekodu__proje_kodu',
+            'stok_kodu',
+            'adet',
+            'depo_secimi',
+            'olusturma_tarih',
+            'son_edit_tarih',
+            'giris_aciklama',
+            'cikis_aciklama'
+        ))
+        profil_data = list(Profil.objects.select_related('projekodu').all().values(
+            'musteri',
+            'projekodu__proje_kodu',
+            'stok_kodu',
+            'adet',
+            'depo_secimi',
+            'olusturma_tarih',
+            'son_edit_tarih',
+            'giris_aciklama',
+            'cikis_aciklama'
+        ))
+        isleme_data = list(Isleme.objects.select_related('projekodu').all().values(
+            'musteri',
+            'projekodu__proje_kodu',
+            'stok_kodu',
+            'adet',
+            'depo_secimi',
+            'olusturma_tarih',
+            'son_edit_tarih',
+            'giris_aciklama',
+            'cikis_aciklama'
+        ))
+        motor_data = list(MotorReduktor.objects.select_related('projekodu').all().values(
+            'musteri',
+            'projekodu__proje_kodu',
+            'stok_kodu',
+            'adet',
+            'depo_secimi',
+            'olusturma_tarih',
+            'son_edit_tarih',
+            'giris_aciklama',
+            'cikis_aciklama'
+        ))
+        teknoloji_data = list(TeknolojikAlim.objects.select_related('projekodu').all().values(
+            'musteri',
+            'projekodu__proje_kodu',
+            'stok_kodu',
+            'adet',
+            'depo_secimi',
+            'olusturma_tarih',
+            'son_edit_tarih',
+            'giris_aciklama',
+            'cikis_aciklama'
+        ))
+
+        # Veri olup olmadığını kontrol et
+        context = {
+            'Sac': sac_data if sac_data else "Veri yok",
+            'Boya': boya_data if boya_data else "Veri yok",
+            'Yatak': yatak_data if yatak_data else "Veri yok",
+            'Profil': profil_data if profil_data else "Veri yok",
+            'Isleme': isleme_data if isleme_data else "Veri yok",
+            'Motor': motor_data if motor_data else "Veri yok",
+            'Teknoloji': teknoloji_data if teknoloji_data else "Veri yok"
+        }
+
+        html_template = loader.get_template('home/stok-action.html')
+        return HttpResponse(html_template.render(context, request))
+
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}")
+    
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}")
+def get_chart_data_action(request):
+    sac_count = Sac.objects.count()
+    boya_count = Boya.objects.count()
+    yatak_count = Yatak.objects.count()
+    motor_count = MotorReduktor.objects.count()
+    profil_count = Profil.objects.count()
+    isleme_count = Isleme.objects.count()
+    teknolojik_alim_count = TeknolojikAlim.objects.count()
+
+    data = {
+        'labels': [
+            "Sac Deposu", 
+            "Boya Deposu", 
+            "Yatak Deposu", 
+            "Motor Deposu", 
+            "Profil Deposu", 
+            "Isleme Deposu", 
+            "Teknolojik Alım Deposu"
+        ],
+        'data': [
+            sac_count, 
+            boya_count, 
+            yatak_count, 
+            motor_count, 
+            profil_count, 
+            isleme_count, 
+            teknolojik_alim_count
+        ]
+    }
+    
+    return JsonResponse(data)
+
+def get_totals_chart_data(request):
+    sac_total = Sac.objects.aggregate(total_adet=Sum('adet'))['total_adet'] or 0
+    boya_total = Boya.objects.aggregate(total_adet=Sum('adet'))['total_adet'] or 0
+    yatak_total = Yatak.objects.aggregate(total_adet=Sum('adet'))['total_adet'] or 0
+    motor_total = MotorReduktor.objects.aggregate(total_adet=Sum('adet'))['total_adet'] or 0
+    profil_total = Profil.objects.aggregate(total_adet=Sum('adet'))['total_adet'] or 0
+    isleme_total = Isleme.objects.aggregate(total_adet=Sum('adet'))['total_adet'] or 0
+    teknolojik_alim_total = TeknolojikAlim.objects.aggregate(total_adet=Sum('adet'))['total_adet'] or 0
+
+    data = {
+        'labels': [
+            "Sac", 
+            "Boya", 
+            "Yatak", 
+            "Motor Redüktör", 
+            "Profil", 
+            "İşleme", 
+            "Teknolojik Alım"
+        ],
+        'data': [
+            sac_total, 
+            boya_total, 
+            yatak_total, 
+            motor_total, 
+            profil_total, 
+            isleme_total, 
+            teknolojik_alim_total
+        ]
+    }
+    
+    return JsonResponse(data)
+
+
+@login_required(login_url="/login/")
+def logshow(request):
+    Logs = Log.objects.all()
+  
+       
+    context = {'segment': 'index','log':Logs}
+   
+    html_template = loader.get_template('home/action-logs.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+

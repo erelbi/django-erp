@@ -19,7 +19,7 @@
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-chart-pie me-1"></i>
-                            Warehouse
+                            Depo Kayıtları
                         </div>
                         <div class="card-body"><canvas id="myPieChart" width="100%" height="50"></canvas></div>
                         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
@@ -29,7 +29,7 @@
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-chart-pie me-1"></i>
-                            Warehouse Movement
+                            Depo'da ki Malzemeler
                         </div>
                         <div class="card-body"><canvas id="cikisChart" width="100%" height="50"></canvas></div>
                         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
@@ -38,43 +38,16 @@
             </div>
             <div class="col-lg-12">
                 <div class="card-body">
-                    <table id="datatablesSimple">
+                    <table id="data-table" class="display">
                         <thead>
                             <tr>
-                                <th>Hareket Sırası</th>
-                                <th>Kullanıcı Kodu</th>
-                                <th>Tarih</th>
-                                <th>Depo</th>
+                                <th>Tablo</th>
+                                <th>Proje Kodu</th>
                                 <th>Stok Kodu</th>
+                                <th>Müşteri</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Hareket Sırası</th>
-                                <th>Kullanıcı Kodu</th>
-                                <th>Tarih</th>
-                                <th>Depo</th>
-                                <th>Stok Kodu</th>
-                            </tr>
-                        </tfoot>
                         <tbody>
-                            <tr>
-                                <td>529</td>
-                                <td>Kalıp Profil</td>
-                                <td>2011/04/25</td>
-                                <td>Profil Deposu</td>
-                                <td>61</td>
-
-                            </tr>
-                            <tr>
-                                <td>528</td>
-                                <td>Helezon Yay</td>
-                                <td>2011/04/25</td>
-                                <td>Sac Deposu</td>
-                                <td>34</td>
-
-                            </tr>
-
                         </tbody>
                     </table>
                 </div>
@@ -93,54 +66,91 @@
     <script src="/static/assets/demo/chart-bar-demo.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
     <script src="/static/assets/js/datatables-simple-demo.js"></script>
+       
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script>
-        var ctx = document.getElementById("myPieChart").getContext('2d');
-        var myPieChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ["Sac Deposu", "Boya Deposu", "Yatak Deposu ", "Motor Deposu"],
-                datasets: [{
-                    data: [12.21, 15.58, 11.25, 8.32],
-                    backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745'],
-                }],
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    tooltip: {
-                        enabled: true,
-                    },
-                },
-            },
+   document.addEventListener('DOMContentLoaded', function () {
+            // Chart.js veri almak için AJAX
+            fetch('/chart-data-action/')
+                .then(response => response.json())
+                .then(data => {
+                    var ctx = document.getElementById('myPieChart').getContext('2d');
+                    var myPieChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                data: data.data,
+                                backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745', '#17a2b8', '#6f42c1', '#fd7e14'],
+                            }],
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                tooltip: {
+                                    enabled: true,
+                                },
+                            },
+                        },
+                    });
+                })
+                .catch(error => console.error('Error fetching chart data:', error));
         });
     </script>
 
 <script>
-    var ctx = document.getElementById("cikisChart").getContext('2d');
-    var myPieChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ["Motor Redüktör", "İşlem Parçaları", "Teknolojik Alım", "Motor"],
-            datasets: [{
-                data: [10.21, 17.58, 15.25, 4.32],
-                backgroundColor: ['#eee8aa', '#8b4513', '#1c6071', '#54ff9f'],
-            }],
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
+     document.addEventListener('DOMContentLoaded', function () {
+            fetch('/totals-chart-data/')
+                .then(response => response.json())
+                .then(data => {
+                    var ctx = document.getElementById('cikisChart').getContext('2d');
+                    var myPieChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                data: data.data,
+                                backgroundColor: ['#eee8aa', '#8b4513', '#1c6071', '#54ff9f', '#ff6347', '#3cb371', '#4682b4'],
+                            }],
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                tooltip: {
+                                    enabled: true,
+                                },
+                            },
+                        },
+                    });
+                })
+                .catch(error => console.error('Error fetching chart data:', error));
+        });
+
+        $(document).ready(function() {
+            $('#data-table').DataTable({
+                "ajax": {
+                    "url": "/api/consolidated-data/",
+                    "dataSrc": ""
                 },
-                tooltip: {
-                    enabled: true,
-                },
-            },
-        },
-    });
+                "columns": [
+                    { "data": "tablo" },
+                    { "data": "proje_kodu" },
+                    { "data": "stok_kodu" },
+                    { "data": "musteri" }
+                ]
+            });
+        });
+
 </script>
+
 
 {% endblock javascripts %}

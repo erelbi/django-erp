@@ -51,72 +51,57 @@
                       
                           <div id="collapseSac" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                             <div class="card-body">
-                                <table id="datatablesSimple">
+                                <table id="table1">
                                     <thead>
                                         <tr>
-                                            <th>Firma</th>
-                                            <th>Proje</th>
-                                            <th>Durum</th>
-                                            <th>Adet</th>
-                                            <th>Kalan</th>
-                                            <th>Kalınlık</th>
-                                            <th>En</th>
-                                            <th>Boy</th>
-                                            <th>Çıkış Tarihi</th>
-                                            <th>Açıklama</th>
-                                            <th>Stok Kodu</th>
+                                          <th>Firma</th>
+                                          <th>Proje</th>
+                                          <th>Stok Kodu</th>
+                                          <th>Adet</th>
+                                          <th>Depo</th>
+                                          <th>Çıkış Tarihi</th>
+                                          <th>Giriş Tarihi</th>
+                                          <th>Giriş Açıklama</th>
+                                          <th>Çıkış Açıklama</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <th>Firma</th>
                                             <th>Proje</th>
-                                            <th>Durum</th>
-                                            <th>Adet</th>
-                                            <th>Kalan</th>
-                                            <th>Kalınlık</th>
-                                            <th>En</th>
-                                            <th>Boy</th>
-                                            <th>Çıkış Tarihi</th>
-                                            <th>Açıklama</th>
                                             <th>Stok Kodu</th>
+                                            <th>Adet</th>
+                                            <th>Depo</th>
+                                            <th>Çıkış Tarihi</th>
+                                            <th>Giriş Tarihi</th>
+                                            <th>Giriş Açıklama</th>
+                                            <th>Çıkış Açıklama</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        <tr>
-                                            <td>Mengenler</td>
-                                            <td>Mercedes Helezon</td>
-                                            <th>Çıkış</th>
-                                            <th>6</th>
-                                            <th>0</th>
-                                            <td>0.20m</td>
-                                            <td>2.10m</td>
-                                            <td>1.20m</td>
-                                            <td>2024/06/15</td>
-                                            <td>Müşteri Kendisi Teslim Aldı</td>
-                                            <td>STK26543165</td>
-            
-                                        </tr>
-                                        <tr>
-                                            <td>THK</td>
-                                            <td>Uçak Kanadı</td>
-                                            <th>Giriş</th>
-                                            <th>8</th>
-                                            <th>2</th>
-                                            <td>0.20m</td>
-                                            <td>2.10m</td>
-                                            <td>1.20m</td>
-                                            <td>2024/07/15</td>
-                                            <td>Kargo Firmasında</td>
-                                            <td>STK26546565</td>
-            
-                                        </tr>
+                                      {% for item in Sac %}
+                                      <tr>
+                                        <td>{{ item.musteri|default:"Veri yok" }}</td>
+                                        <td>{{ item.projekodu.proje_kodu|default:"Veri yok" }}</td>
+                                        <td>{{ item.stok_kodu|default:"Veri yok" }}</td>
+                                        <td>{{ item.adet|default:"Veri yok" }}</td>
+                                        <td>{{ item.depo_secimi|default:"Veri yok" }}</td>
+                                        <td>{{ item.olusturma_tarih|date:"Y-m-d H:i:s"|default:"Veri yok" }}</td>
+                                        <td>{{ item.son_edit_tarih|date:"Y-m-d H:i:s"|default:"Veri yok" }}</td>
+                                        <td>{{ item.giris_aciklama|default:"Veri yok" }}</td>
+                                        <td>{{ item.cikis_aciklama|default:"Veri yok" }}</td>
+                                      </tr>
+                                      {% empty %}
+                                      <tr>
+                                        <td colspan="7">Veri bulunamadı.</td>
+                                    </tr>
+                                    {% endfor %}
                                        
                                     </tbody>
                                 </table>
 
+                              </div>
                             </div>
-                          </div>
                         </div>
                         <div class="card">
                             <div class="card-header" id="headingOne">
@@ -129,6 +114,55 @@
                         
                             <div id="collapseBoya" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
                               <div class="card-body">
+
+                                <table id="table2">
+                                  <thead>
+                                      <tr>
+                                        <th>Firma</th>
+                                        <th>Proje</th>
+                                        <th>Stok Kodu</th>
+                                        <th>Adet</th>
+                                        <th>Depo</th>
+                                        <th>Çıkış Tarihi</th>
+                                        <th>Giriş Tarihi</th>
+                                        <th>Giriş Açıklama</th>
+                                        <th>Çıkış Açıklama</th>
+                                      </tr>
+                                  </thead>
+                                  <tfoot>
+                                      <tr>
+                                          <th>Firma</th>
+                                          <th>Proje</th>
+                                          <th>Stok Kodu</th>
+                                          <th>Adet</th>
+                                          <th>Depo</th>
+                                          <th>Çıkış Tarihi</th>
+                                          <th>Giriş Tarihi</th>
+                                          <th>Giriş Açıklama</th>
+                                          <th>Çıkış Açıklama</th>
+                                      </tr>
+                                  </tfoot>
+                                  <tbody>
+                                    {% for item in Boya %}
+                                    <tr>
+                                      <td>{{ item.musteri|default:"Veri yok" }}</td>
+                                      <td>{{ item.projekodu.proje_kodu|default:"Veri yok" }}</td>
+                                      <td>{{ item.stok_kodu|default:"Veri yok" }}</td>
+                                      <td>{{ item.adet|default:"Veri yok" }}</td>
+                                      <td>{{ item.depo_secimi|default:"Veri yok" }}</td>
+                                      <td>{{ item.olusturma_tarih|date:"Y-m-d H:i:s"|default:"Veri yok" }}</td>
+                                      <td>{{ item.son_edit_tarih|date:"Y-m-d H:i:s"|default:"Veri yok" }}</td>
+                                      <td>{{ item.giris_aciklama|default:"Veri yok" }}</td>
+                                      <td>{{ item.cikis_aciklama|default:"Veri yok" }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                      <td colspan="7">Veri bulunamadı.</td>
+                                  </tr>
+                                  {% endfor %}
+                                     
+                                  </tbody>
+                              </table>
                                 
                               </div>
                             </div>
@@ -143,7 +177,54 @@
                           </div>
                           <div id="collapseYatak" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                             <div class="card-body">
-                              Yatak
+                              <table id="table3">
+                                <thead>
+                                    <tr>
+                                      <th>Firma</th>
+                                      <th>Proje</th>
+                                      <th>Stok Kodu</th>
+                                      <th>Adet</th>
+                                      <th>Depo</th>
+                                      <th>Çıkış Tarihi</th>
+                                      <th>Giriş Tarihi</th>
+                                      <th>Giriş Açıklama</th>
+                                      <th>Çıkış Açıklama</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Firma</th>
+                                        <th>Proje</th>
+                                        <th>Stok Kodu</th>
+                                        <th>Adet</th>
+                                        <th>Depo</th>
+                                        <th>Çıkış Tarihi</th>
+                                        <th>Giriş Tarihi</th>
+                                        <th>Giriş Açıklama</th>
+                                        <th>Çıkış Açıklama</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                  {% for item in Yatak %}
+                                  <tr>
+                                    <td>{{ item.musteri|default:"Veri yok" }}</td>
+                                    <td>{{ item.projekodu.proje_kodu|default:"Veri yok" }}</td>
+                                    <td>{{ item.stok_kodu|default:"Veri yok" }}</td>
+                                    <td>{{ item.adet|default:"Veri yok" }}</td>
+                                    <td>{{ item.depo_secimi|default:"Veri yok" }}</td>
+                                    <td>{{ item.olusturma_tarih|date:"Y-m-d H:i:s"|default:"Veri yok" }}</td>
+                                    <td>{{ item.son_edit_tarih|date:"Y-m-d H:i:s"|default:"Veri yok" }}</td>
+                                    <td>{{ item.giris_aciklama|default:"Veri yok" }}</td>
+                                    <td>{{ item.cikis_aciklama|default:"Veri yok" }}</td>
+                                  </tr>
+                                  {% empty %}
+                                  <tr>
+                                    <td colspan="7">Veri bulunamadı.</td>
+                                </tr>
+                                {% endfor %}
+                                   
+                                </tbody>
+                            </table>
                             </div>
                           </div>
                         </div>
@@ -157,7 +238,54 @@
                           </div>
                           <div id="collapsemotor" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                             <div class="card-body">
-
+                              <table id="table4">
+                                <thead>
+                                    <tr>
+                                      <th>Firma</th>
+                                      <th>Proje</th>
+                                      <th>Stok Kodu</th>
+                                      <th>Adet</th>
+                                      <th>Depo</th>
+                                      <th>Çıkış Tarihi</th>
+                                      <th>Giriş Tarihi</th>
+                                      <th>Giriş Açıklama</th>
+                                      <th>Çıkış Açıklama</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Firma</th>
+                                        <th>Proje</th>
+                                        <th>Stok Kodu</th>
+                                        <th>Adet</th>
+                                        <th>Depo</th>
+                                        <th>Çıkış Tarihi</th>
+                                        <th>Giriş Tarihi</th>
+                                        <th>Giriş Açıklama</th>
+                                        <th>Çıkış Açıklama</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                  {% for item in Motor %}
+                                  <tr>
+                                    <td>{{ item.musteri|default:"Veri yok" }}</td>
+                                    <td>{{ item.projekodu.proje_kodu|default:"Veri yok" }}</td>
+                                    <td>{{ item.stok_kodu|default:"Veri yok" }}</td>
+                                    <td>{{ item.adet|default:"Veri yok" }}</td>
+                                    <td>{{ item.depo_secimi|default:"Veri yok" }}</td>
+                                    <td>{{ item.olusturma_tarih|date:"Y-m-d H:i:s"|default:"Veri yok" }}</td>
+                                    <td>{{ item.son_edit_tarih|date:"Y-m-d H:i:s"|default:"Veri yok" }}</td>
+                                    <td>{{ item.giris_aciklama|default:"Veri yok" }}</td>
+                                    <td>{{ item.cikis_aciklama|default:"Veri yok" }}</td>
+                                  </tr>
+                                  {% empty %}
+                                  <tr>
+                                    <td colspan="7">Veri bulunamadı.</td>
+                                </tr>
+                                {% endfor %}
+                                   
+                                </tbody>
+                            </table>
                             </div>
                           </div>
                         </div>
@@ -171,7 +299,54 @@
                             </div>
                             <div id="collapseprofil" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                               <div class="card-body">
-                                Profil
+                                <table id="table5">
+                                  <thead>
+                                      <tr>
+                                        <th>Firma</th>
+                                        <th>Proje</th>
+                                        <th>Stok Kodu</th>
+                                        <th>Adet</th>
+                                        <th>Depo</th>
+                                        <th>Çıkış Tarihi</th>
+                                        <th>Giriş Tarihi</th>
+                                        <th>Giriş Açıklama</th>
+                                        <th>Çıkış Açıklama</th>
+                                      </tr>
+                                  </thead>
+                                  <tfoot>
+                                      <tr>
+                                          <th>Firma</th>
+                                          <th>Proje</th>
+                                          <th>Stok Kodu</th>
+                                          <th>Adet</th>
+                                          <th>Depo</th>
+                                          <th>Çıkış Tarihi</th>
+                                          <th>Giriş Tarihi</th>
+                                          <th>Giriş Açıklama</th>
+                                          <th>Çıkış Açıklama</th>
+                                      </tr>
+                                  </tfoot>
+                                  <tbody>
+                                    {% for item in Profil %}
+                                    <tr>
+                                      <td>{{ item.musteri|default:"Veri yok" }}</td>
+                                      <td>{{ item.projekodu.proje_kodu|default:"Veri yok" }}</td>
+                                      <td>{{ item.stok_kodu|default:"Veri yok" }}</td>
+                                      <td>{{ item.adet|default:"Veri yok" }}</td>
+                                      <td>{{ item.depo_secimi|default:"Veri yok" }}</td>
+                                      <td>{{ item.olusturma_tarih|date:"Y-m-d H:i:s"|default:"Veri yok" }}</td>
+                                      <td>{{ item.son_edit_tarih|date:"Y-m-d H:i:s"|default:"Veri yok" }}</td>
+                                      <td>{{ item.giris_aciklama|default:"Veri yok" }}</td>
+                                      <td>{{ item.cikis_aciklama|default:"Veri yok" }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                      <td colspan="7">Veri bulunamadı.</td>
+                                  </tr>
+                                  {% endfor %}
+                                     
+                                  </tbody>
+                              </table>
                               </div>
                             </div>
                           </div>
@@ -186,7 +361,54 @@
                         </div>
                         <div id="collapseislem" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                           <div class="card-body">
-                            
+                            <table id="table6">
+                              <thead>
+                                  <tr>
+                                    <th>Firma</th>
+                                    <th>Proje</th>
+                                    <th>Stok Kodu</th>
+                                    <th>Adet</th>
+                                    <th>Depo</th>
+                                    <th>Çıkış Tarihi</th>
+                                    <th>Giriş Tarihi</th>
+                                    <th>Giriş Açıklama</th>
+                                    <th>Çıkış Açıklama</th>
+                                  </tr>
+                              </thead>
+                              <tfoot>
+                                  <tr>
+                                      <th>Firma</th>
+                                      <th>Proje</th>
+                                      <th>Stok Kodu</th>
+                                      <th>Adet</th>
+                                      <th>Depo</th>
+                                      <th>Çıkış Tarihi</th>
+                                      <th>Giriş Tarihi</th>
+                                      <th>Giriş Açıklama</th>
+                                      <th>Çıkış Açıklama</th>
+                                  </tr>
+                              </tfoot>
+                              <tbody>
+                                {% for item in Isleme %}
+                                <tr>
+                                  <td>{{ item.musteri|default:"Veri yok" }}</td>
+                                  <td>{{ item.projekodu.proje_kodu|default:"Veri yok" }}</td>
+                                  <td>{{ item.stok_kodu|default:"Veri yok" }}</td>
+                                  <td>{{ item.adet|default:"Veri yok" }}</td>
+                                  <td>{{ item.depo_secimi|default:"Veri yok" }}</td>
+                                  <td>{{ item.olusturma_tarih|date:"Y-m-d H:i:s"|default:"Veri yok" }}</td>
+                                  <td>{{ item.son_edit_tarih|date:"Y-m-d H:i:s"|default:"Veri yok" }}</td>
+                                  <td>{{ item.giris_aciklama|default:"Veri yok" }}</td>
+                                  <td>{{ item.cikis_aciklama|default:"Veri yok" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                  <td colspan="7">Veri bulunamadı.</td>
+                              </tr>
+                              {% endfor %}
+                                 
+                              </tbody>
+                          </table>
                           </div>
                         </div>
                       </div>
@@ -200,6 +422,54 @@
                         </div>
                         <div id="collapseteknolojik" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                           <div class="card-body">
+                            <table id="table7">
+                              <thead>
+                                  <tr>
+                                    <th>Firma</th>
+                                    <th>Proje</th>
+                                    <th>Stok Kodu</th>
+                                    <th>Adet</th>
+                                    <th>Depo</th>
+                                    <th>Çıkış Tarihi</th>
+                                    <th>Giriş Tarihi</th>
+                                    <th>Giriş Açıklama</th>
+                                    <th>Çıkış Açıklama</th>
+                                  </tr>
+                              </thead>
+                              <tfoot>
+                                  <tr>
+                                      <th>Firma</th>
+                                      <th>Proje</th>
+                                      <th>Stok Kodu</th>
+                                      <th>Adet</th>
+                                      <th>Depo</th>
+                                      <th>Çıkış Tarihi</th>
+                                      <th>Giriş Tarihi</th>
+                                      <th>Giriş Açıklama</th>
+                                      <th>Çıkış Açıklama</th>
+                                  </tr>
+                              </tfoot>
+                              <tbody>
+                                {% for item in Teknoloji %}
+                                <tr>
+                                  <td>{{ item.musteri|default:"Veri yok" }}</td>
+                                  <td>{{ item.projekodu.proje_kodu|default:"Veri yok" }}</td>
+                                  <td>{{ item.stok_kodu|default:"Veri yok" }}</td>
+                                  <td>{{ item.adet|default:"Veri yok" }}</td>
+                                  <td>{{ item.depo_secimi|default:"Veri yok" }}</td>
+                                  <td>{{ item.olusturma_tarih|date:"Y-m-d H:i:s"|default:"Veri yok" }}</td>
+                                  <td>{{ item.son_edit_tarih|date:"Y-m-d H:i:s"|default:"Veri yok" }}</td>
+                                  <td>{{ item.giris_aciklama|default:"Veri yok" }}</td>
+                                  <td>{{ item.cikis_aciklama|default:"Veri yok" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                  <td colspan="7">Veri bulunamadı.</td>
+                              </tr>
+                              {% endfor %}
+                                 
+                              </tbody>
+                          </table>
                           </div>
                         </div>
                       </div>
@@ -208,50 +478,160 @@
                 </div>
             </main>
       
-    
+ 
 
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+        
+         const table1 = document.querySelector("#table1");
+         const dataTable1 = new DataTable(table1, {
+             perPage: 5, 
+             perPageSelect: [5, 10, 15],
+             searchable: true, 
+             sortable: true,
+             language: {
+                    search: "Ara:",
+                    zeroRecords: "Tabloda veri mevcut değil",
+                    infoEmpty: "Veri mevcut değil",
+                    paginate: {
+                        first: "İlk",
+                        previous: "Önceki",
+                        next: "Sonraki",
+                        last: "Son"
+                    }
+                }
+         });
+
+         const table2 = document.querySelector("#table2");
+         const dataTable2 = new DataTable(table2, {
+             perPage: 5, 
+             perPageSelect: [5, 10, 15], 
+             searchable: true, 
+             sortable: true,
+             language: {
+                    search: "Ara:",
+                    zeroRecords: "Tabloda veri mevcut değil",
+                    infoEmpty: "Veri mevcut değil",
+                    paginate: {
+                        first: "İlk",
+                        previous: "Önceki",
+                        next: "Sonraki",
+                        last: "Son"
+                    }
+                }
+         });
+
+         const table3 = document.querySelector("#table3");
+         const dataTable3 = new DataTable(table3, {
+             perPage: 5, 
+             perPageSelect: [5, 10, 15], 
+             searchable: true, 
+             sortable: true,
+             language: {
+                    search: "Ara:",
+                    zeroRecords: "Tabloda veri mevcut değil",
+                    infoEmpty: "Veri mevcut değil",
+                    paginate: {
+                        first: "İlk",
+                        previous: "Önceki",
+                        next: "Sonraki",
+                        last: "Son"
+                    }
+                }
+         });
+
+         const table4 = document.querySelector("#table4");
+         const dataTable4 = new DataTable(table4, {
+             perPage: 5, 
+             perPageSelect: [5, 10, 15], 
+             searchable: true, 
+             sortable: true,
+             language: {
+                    search: "Ara:",
+                    zeroRecords: "Tabloda veri mevcut değil",
+                    infoEmpty: "Veri mevcut değil",
+                    paginate: {
+                        first: "İlk",
+                        previous: "Önceki",
+                        next: "Sonraki",
+                        last: "Son"
+                    }
+                } 
+         });
+
+         const table5 = document.querySelector("#table5");
+         const dataTable5 = new DataTable(table5, {
+             perPage: 5, 
+             perPageSelect: [5, 10, 15], 
+             searchable: true, 
+             sortable: true,
+             language: {
+                    search: "Ara:",
+                    zeroRecords: "Tabloda veri mevcut değil",
+                    infoEmpty: "Veri mevcut değil",
+                    paginate: {
+                        first: "İlk",
+                        previous: "Önceki",
+                        next: "Sonraki",
+                        last: "Son"
+                    }
+                }
+         });
+
+         const table6 = document.querySelector("#table6");
+         const dataTable6 = new DataTable(table6, {
+             perPage: 5, 
+             perPageSelect: [5, 10, 15], 
+             searchable: true, 
+             sortable: true,
+             language: {
+                    search: "Ara:",
+                    zeroRecords: "Tabloda veri mevcut değil",
+                    infoEmpty: "Veri mevcut değil",
+                    paginate: {
+                        first: "İlk",
+                        previous: "Önceki",
+                        next: "Sonraki",
+                        last: "Son"
+                    }
+                } 
+         });
+         const table7 = document.querySelector("#table7");
+         const dataTable7 = new DataTable(table7, {
+             perPage: 5, 
+             perPageSelect: [5, 10, 15], 
+             searchable: true, 
+             sortable: true,
+             language: {
+                    search: "Ara:",
+                    zeroRecords: "Tabloda veri mevcut değil",
+                    infoEmpty: "Veri mevcut değil",
+                    paginate: {
+                        first: "İlk",
+                        previous: "Önceki",
+                        next: "Sonraki",
+                        last: "Son"
+                    }
+                } 
+         });
+     });
+     
+
+</script>
 
 
 {% endblock content %}
 
-<!-- Specific Page JS goes HERE  -->
+
+
 {% block javascripts %}
     
-        <script>
-            $(document).ready(function() {
-                var currentCell;
 
-                // Her hücreye tıklanabilirliği ekleyin
-                $(".editable").click(function() {
-                    currentCell = $(this);
-                    $("#modalInput").val(currentCell.text());
-                    $("#editModal").modal("show");
-                });
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
-                // Değişiklikleri kaydetme
-                $("#saveBtn").click(function() {
-                    var newValue = $("#modalInput").val();
-                    currentCell.text(newValue);
-                    $("#editModal").modal("hide");
-
-                    // Güncellenen veriyi sunucuya göndermek için AJAX kullanabilirsiniz
-                    // $.ajax({
-                    //     url: "/update-cell",
-                    //     method: "POST",
-                    //     data: {
-                    //         column: currentCell.index(),
-                    //         row: currentCell.closest("tr").index(),
-                    //         value: newValue
-                    //     },
-                    //     success: function(response) {
-                    //         console.log("Başarıyla güncellendi!");
-                    //     }
-                    // });
-                });
-            });
-            </script>
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
     <script src="/static/assets/js/datatables-simple-demo.js"></script>
 
 {% endblock javascripts %}

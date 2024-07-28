@@ -11,9 +11,32 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
-
-
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.dataTables.min.css">
+      
+        
+        <style>
+            .autocomplete-suggestions {
+                border: 1px solid #e0e0e0;
+                max-height: 150px;
+                overflow-y: auto;
+                position: absolute;
+                z-index: 1000;
+                background-color: white;
+            }
+            .autocomplete-suggestion {
+                padding: 10px;
+                cursor: pointer;
+            }
+            .autocomplete-suggestion:hover {
+                background-color: #e0e0e0;
+            }
+                    
+           .hidden-field {
+            display: none;
+           }
+        </style>
         <style>
             .full-screen-input {
                 width: 100%;
@@ -26,6 +49,7 @@
                 margin-left: 10px;
             }
         </style>
+      
         </head>
 
             
@@ -44,333 +68,66 @@
                           <div class="card-header" id="headingOne">
                             <h5 class="mb-0">
                               <button class="btn btn-link" data-toggle="collapse" data-target="#collapseSac" aria-expanded="true" aria-controls="collapseOne">
-                                Saç
+                                Stok Çıkış
                               </button>
                             </h5>
                           </div>
                       
                           <div id="collapseSac" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                             <div class="card-body">
-                                <form method="post">
+                                <form id="stokexportForm" method="post">
                                     {% csrf_token %}
                                     <div class="form-row">
 
                                         <div class="form-group col-md-6">
-                                            <label for="stok_kodu">Çıkış Adeti</label>
-                                            <input type="text" class="form-control" id="stok_kodu" name="stok_kodu" placeholder="Enter Stock Code">
+                                            <label for="stok_kodu">Stok Kodu</label>
+                                            <input type="text" class="form-control" id="stok_kodu" name="stok_kodu" placeholder="Stok Kodunu Giriniz">
+                                            <div id="stok_kodu_suggestions" class="autocomplete-suggestions"></div>
                                         </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="stok_kodu">Customer</label>
-                                            <input type="text" class="form-control" id="stok_kodu" name="stok_kodu" placeholder="Enter Stock Code">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
                                         <div class="form-group col-md-6">
                                             <label for="proje">Proje</label>
-                                            <input type="text" class="form-control" id="proje" name="proje" placeholder="Enter Project">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="kalinlik">Stok Kodu</label>
-                                            
+                                            <input type="text" class="form-control" id="proje" name="proje" placeholder="Proje" readonly>
                                         </div>
                                     </div>
-
                                     <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="kalite">Kalite</label>
-                                            <input type="text" class="form-control" id="kalite" name="kalite" placeholder="Enter Quality">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="depo_secimi">Depo Secimi</label>
-                                            <input list="depo_secimi_list" class="form-control" id="depo_secimi" name="depo_secimi" placeholder="Select or enter Depot">
-                                            <datalist id="depo_secimi_list">
-                                                <option value="Profil Deposu">
-                                                <option value="Yatak Deposu">
-                                                <option value="Boya Deposu">
-                                            </datalist>
-                                        </div>
+                                        
+                                            <div class="form-group col-md-4">
+                                                <label for="musteri">Müşteri</label>
+                                                <input type="text" class="form-control" id="musteri" name="musteri" placeholder="Müşteri" readonly>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="adet">Adet</label>
+                                                <input type="text" class="form-control" id="adet" name="adet" placeholder="Adet" readonly>
+                                            </div>
+                                            <div class="form-group col-md-0  hidden-field" >
+                                                <label for="tablo">Tablo</label>
+                                                <input type="text" class="form-control" id="tablo" name="tablo" placeholder="Table" readonly>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="depo_secimi">Depo Seçimi</label>
+                                                <input type="text" class="form-control" id="depo_secimi" name="depo_secimi" placeholder="Depo" readonly>
+                                            </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="tarih">Tarih</label>
-                                        <input type="datetime-local" class="form-control" id="tarih" name="tarih">
+                                    <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="cikis_aciklama">Çıkış Açıklama</label>
+                                        <input type="text" class="form-control" id="cikis_aciklama" name="cikis_aciklama" placeholder="Açıklama">
+                                      </div>
+                                      <div class="form-group col-md-3">
+                                        <label for="cikis_adeti">Çıkış Adet</label>
+                                        <input type="number" class="form-control" id="cikis_adeti" name="cikis_adeti"  placeholder="Çıkış Adet">
+                                      </div>
+                                      <div class="form-group col-md-3">
+                                        <label for="son_edit_tarih">Tarih</label>
+                                        <input type="datetime-local" class="form-control" id="son_edit_tarih" name="tarih">
+                                    </div> 
                                     </div>
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </form>
                             </div>
                           </div>
                         </div>
-                        <div class="card">
-                            <div class="card-header" id="headingOne">
-                              <h5 class="mb-0">
-                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseBoya" aria-expanded="false" aria-controls="collapseOne">
-                                  Boya
-                                </button>
-                              </h5>
-                            </div>
-                        
-                            <div id="collapseBoya" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
-                              <div class="card-body">
-                                <form method="post">
-                                    {% csrf_token %}
-                                    
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="stok_kodu">Stok Kodu</label>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="miktar">Miktar</label>
-                                            <input type="number" class="form-control" id="miktar" name="miktar" placeholder="Enter Quantity" step="0.01">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="depo_secimi">Depo Secimi</label>
-                                            <input list="depo_secimi_list" class="form-control" id="depo_secimi" name="depo_secimi" placeholder="Select or enter Depot">
-                                            <datalist id="depo_secimi_list">
-                                                <option value="Profil Deposu">
-                                                <option value="Yatak Deposu">
-                                                <option value="Boya Deposu">
-                                            </datalist>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tarih">Tarih</label>
-                                        <input type="datetime-local" class="form-control" id="tarih" name="tarih">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
-                        <div class="card">
-                          <div class="card-header" id="headingTwo">
-                            <h5 class="mb-0">
-                              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseYatak" aria-expanded="false" aria-controls="collapseTwo">
-                                Yatak
-                              </button>
-                            </h5>
-                          </div>
-                          <div id="collapseYatak" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                            <div class="card-body">
-                              Yatak
-                            </div>
-                          </div>
-                        </div>
-                        <div class="card">
-                          <div class="card-header" id="headingThree">
-                            <h5 class="mb-0">
-                              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsemotor" aria-expanded="false" aria-controls="collapseThree">
-                                Motor Redüktör
-                              </button>
-                            </h5>
-                          </div>
-                          <div id="collapsemotor" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                            <div class="card-body">
-                                <form method="post">
-                                    {% csrf_token %}
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="stok_kodu">Stok Kodu</label>
-                                            <input type="text" class="form-control" id="stok_kodu" name="stok_kodu" placeholder="Enter Stock Code">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="model">Model</label>
-                                            <input type="text" class="form-control" id="model" name="model" placeholder="Enter Model">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="guc">Guc</label>
-                                            <input type="number" class="form-control" id="guc" name="guc" placeholder="Enter Power" step="0.01">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="adet">Adet</label>
-                                            <input type="number" class="form-control" id="adet" name="adet" placeholder="Enter Quantity">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="depo_secimi">Depo Secimi</label>
-                                            <input list="depo_secimi_list" class="form-control" id="depo_secimi" name="depo_secimi" placeholder="Select or enter Depot">
-                                            <datalist id="depo_secimi_list">
-                                                <option value="Profil Deposu">
-                                                <option value="Yatak Deposu">
-                                                <option value="Boya Deposu">
-                                            </datalist>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tarih">Tarih</label>
-                                        <input type="datetime-local" class="form-control" id="tarih" name="tarih">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                </form>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-header" id="headingThree">
-                              <h5 class="mb-0">
-                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseprofil" aria-expanded="false" aria-controls="collapseThree">
-                                  Profil
-                                </button>
-                              </h5>
-                            </div>
-                            <div id="collapseprofil" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                              <div class="card-body">
-                                <form method="post"">
-                                    {% csrf_token %}
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="stok_kodu">Stok Kodu</label>
-                                            <input type="text" class="form-control" id="stok_kodu" name="stok_kodu" placeholder="Enter Stock Code">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="proje">Proje</label>
-                                            <input type="text" class="form-control" id="proje" name="proje" placeholder="Enter Project">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="kalinlik">Kalinlik</label>
-                                            <input type="number" class="form-control" id="kalinlik" name="kalinlik" placeholder="Enter Thickness" step="0.01">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="boy">Boy</label>
-                                            <input type="number" class="form-control" id="boy" name="boy" placeholder="Enter Length" step="0.01">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="adet">Adet</label>
-                                            <input type="number" class="form-control" id="adet" name="adet" placeholder="Enter Quantity">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="kalite">Kalite</label>
-                                            <input type="text" class="form-control" id="kalite" name="kalite" placeholder="Enter Quality">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="depo_secimi">Depo Secimi</label>
-                                            <input list="depo_secimi_list" class="form-control" id="depo_secimi" name="depo_secimi" placeholder="Select or enter Depot">
-                                            <datalist id="depo_secimi_list">
-                                                <option value="Profil Deposu">
-                                                <option value="Yatak Deposu">
-                                                <option value="Boya Deposu">
-                                            </datalist>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tarih">Tarih</label>
-                                        <input type="datetime-local" class="form-control" id="tarih" name="tarih">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
-                      </div>
-                      <div class="card">
-                        <div class="card-header" id="headingThree">
-                          <h5 class="mb-0">
-                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseislem" aria-expanded="false" aria-controls="collapseThree">
-                              İşlem Parçaları
-                            </button>
-                          </h5>
-                        </div>
-                        <div id="collapseislem" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                          <div class="card-body">
-                            <form method="post">
-                                {% csrf_token %}
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="stok_kodu">Stok Kodu</label>
-                                        <input type="text" class="form-control" id="stok_kodu" name="stok_kodu" placeholder="Enter Stock Code">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="islem_tipi">Islem Tipi</label>
-                                        <input type="text" class="form-control" id="islem_tipi" name="islem_tipi" placeholder="Enter Process Type">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="miktar">Miktar</label>
-                                        <input type="number" class="form-control" id="miktar" name="miktar" placeholder="Enter Quantity" step="0.01">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="depo_secimi">Depo Secimi</label>
-                                        <input list="depo_secimi_list" class="form-control" id="depo_secimi" name="depo_secimi" placeholder="Select or enter Depot">
-                                        <datalist id="depo_secimi_list">
-                                            <option value="Profil Deposu">
-                                            <option value="Yatak Deposu">
-                                            <option value="Boya Deposu">
-                                        </datalist>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="tarih">Tarih</label>
-                                        <input type="datetime-local" class="form-control" id="tarih" name="tarih">
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="card">
-                        <div class="card-header" id="headingThree">
-                          <h5 class="mb-0">
-                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseteknolojik" aria-expanded="false" aria-controls="collapseThree">
-                              Teknolojik Alım
-                            </button>
-                          </h5>
-                        </div>
-                        <div id="collapseteknolojik" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                          <div class="card-body">
-                            <form method="post">
-                                
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="stok_kodu">Stok Kodu</label>
-                                        <input type="text" class="form-control" id="stok_kodu" name="stok_kodu" placeholder="Enter Stock Code">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="malzeme_tipi">Malzeme Tipi</label>
-                                        <input type="text" class="form-control" id="malzeme_tipi" name="malzeme_tipi" placeholder="Enter Material Type">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="miktar">Miktar</label>
-                                        <input type="number" class="form-control" id="miktar" name="miktar" placeholder="Enter Quantity" step="0.01">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="depo_secimi">Depo Secimi</label>
-                                        <input list="depo_secimi_list" class="form-control" id="depo_secimi" name="depo_secimi" placeholder="Depo Seçiniz">
-                                        <datalist id="depo_secimi_list">
-                                            <option value="Profil Deposu">
-                                            <option value="Yatak Deposu">
-                                            <option value="Boya Deposu">
-                                        </datalist>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="tarih">Tarih</label>
-                                        <input type="datetime-local" class="form-control" id="tarih" name="tarih">
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    
-
+   
                 </div>
             </main>
       
@@ -384,40 +141,78 @@
 {% block javascripts %}
     
         <script>
-            $(document).ready(function() {
-                var currentCell;
+               $(document).ready(function() {
+            function search(query, url, suggestionDiv) {
+                if (query.length > 0) {
+                    $.ajax({
+                        url: url,
+                        data: {
+                            'query': query
+                        },
+                        success: function(data) {
+                            let suggestions = data.results;
+                            let suggestionHTML = '';
+                            suggestions.forEach(function(suggestion) {
+                                suggestionHTML += `<div class="autocomplete-suggestion" data-musteri="${suggestion.musteri}" data-projekodu="${suggestion.projekodu__proje_kodu}" data-adet="${suggestion.adet}" data-depo_secimi="${suggestion.depo_secimi}" data-tablo="${suggestion.table}">${suggestion.stok_kodu}</div>`;
+                            });
+                            $(suggestionDiv).html(suggestionHTML).show();
+                        }
+                    });
+                } else {
+                    $(suggestionDiv).hide();
+                }
+            }
 
-                // Her hücreye tıklanabilirliği ekleyin
-                $(".editable").click(function() {
-                    currentCell = $(this);
-                    $("#modalInput").val(currentCell.text());
-                    $("#editModal").modal("show");
-                });
-
-                // Değişiklikleri kaydetme
-                $("#saveBtn").click(function() {
-                    var newValue = $("#modalInput").val();
-                    currentCell.text(newValue);
-                    $("#editModal").modal("hide");
-
-                    // Güncellenen veriyi sunucuya göndermek için AJAX kullanabilirsiniz
-                    // $.ajax({
-                    //     url: "/update-cell",
-                    //     method: "POST",
-                    //     data: {
-                    //         column: currentCell.index(),
-                    //         row: currentCell.closest("tr").index(),
-                    //         value: newValue
-                    //     },
-                    //     success: function(response) {
-                    //         console.log("Başarıyla güncellendi!");
-                    //     }
-                    // });
-                });
+            $('#stok_kodu').on('input', function() {
+                let query = $(this).val();
+                search(query, '{% url "search_stok_kodu" %}', '#stok_kodu_suggestions');
             });
-            </script>
+
+            $(document).on('click', '.autocomplete-suggestion', function() {
+                let text = $(this).text();
+                let musteri = $(this).data('musteri');
+                let projekodu = $(this).data('projekodu');
+                let adet = $(this).data('adet');
+                let depoSecimi = $(this).data('depo_secimi');
+                let tablo = $(this).data('tablo');
+                
+                $('#stok_kodu').val(text);
+                $('#musteri').val(musteri);
+                $('#proje').val(projekodu);
+                $('#adet').val(adet);
+                $('#depo_secimi').val(depoSecimi);
+                $('#tablo').val(tablo);
+
+                $('#stok_kodu_suggestions').hide();
+            });
+
+            $(document).click(function(e) {
+                if (!$(e.target).closest('.autocomplete-suggestions, input').length) {
+                    $('.autocomplete-suggestions').hide();
+                }
+            });
+        });
+    </script>
+    <script>
+            $('#stokexportForm').on('submit', function(e) {
+        e.preventDefault();
+        console.log($(this).serialize());
+        $.ajax({
+            type: 'POST',
+            url: '{% url "update_stock" %}',
+            data: $(this).serialize(),
+            success: function(response) {
+                alert(response.message);
+            }
+        });
+    });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
     <script src="/static/assets/js/datatables-simple-demo.js"></script>
+ 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+
 
 {% endblock javascripts %}

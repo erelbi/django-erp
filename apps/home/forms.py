@@ -1,9 +1,16 @@
 from django import forms
 from .models import MusteriKayit,Sac,Boya,Yatak,MotorReduktor,Profil,Isleme,TeknolojikAlim
-import uuid
+from .signals import log_create_or_update
 
 
 class MusteriKayitForm(forms.ModelForm):
+
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        log_create_or_update(sender=self.object.__class__, instance=self.object, created=True, user=self.request.user)
+        return response
+    
     class Meta:
         model = MusteriKayit
         fields = ['musteri_adi', 'adres', 'telefon', 'email','aciklama','proje_kodu','proje_genel','created_by']
