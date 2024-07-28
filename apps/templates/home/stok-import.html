@@ -6,6 +6,42 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+
+
+<style>
+
+    #message {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 16px;
+    }
+    
+    .alert {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+    
+    .alert.success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .alert.error {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    
+    .alert.info {
+        background-color: #cce5ff;
+        color: #004085;
+    }
+    
+    .alert.warning {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    </style>
 <head>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -27,6 +63,7 @@
             }
         </style>
         </head>
+
 
             
             <main>
@@ -51,55 +88,78 @@
                       
                           <div id="collapseSac" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                             <div class="card-body">
-                                <form method="post">
+                                <div id="message"></div>
+                                <form id="sacimportForm" method="post">
                                     {% csrf_token %}
                                     <div class="form-row">
-
                                         <div class="form-group col-md-6">
-                                            <label for="stok_kodu">Stok Kodu</label>
-                                            <input type="text" class="form-control" id="stok_kodu" name="stok_kodu" placeholder="Enter Stock Code">
-                                        </div>
+                                            <label for="musteri_adi">Müşteri Adı</label>
+                                            <select class="form-control" id="musteri_adi_sac" name="musteri_adi">
+                                                <option value="">Müşteri Seçin</option>
+                                                
+                                                {% for musteri_adi in musteri_adlari %}
+                                                    <option value="{{ musteri_adi }}">{{ musteri_adi }}</option>
+                                                {% endfor %}
+                                            </select>
                                     </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="musteri_adi">Giriş Açıklama</label>
+                                        <input type="text" class="form-control" id="giris_aciklama_sac" name="aciklama" placeholder="AÇIKLAMA">
+                                </div>
+                                </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
-                                            <label for="proje">Proje</label>
-                                            <input type="text" class="form-control" id="proje" name="proje" placeholder="Enter Project">
+                                            <label for="proje">Proje Kodu</label>
+                                            <select class="form-control" id="proje_kodu_sac" name="proje_kodu">
+                                                <option value="">Proje Kodu Seçin</option>
+                                                {% for proje_kodu in proje_kodlari %}
+                                                    <option value="{{ proje_kodu }}">{{ proje_kodu }}</option>
+                                                {% endfor %}
+                                            </select>
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="kalinlik">Kalinlik</label>
-                                            <input type="number" class="form-control" id="kalinlik" name="kalinlik" placeholder="Enter Thickness" step="0.01">
+                                            <input type="number" class="form-control" id="kalinlik_sac" name="kalinlik" placeholder="KALINLIK 0.01" step="0.01">
                                         </div>
                                     </div>
                                     <div class="form-row">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label for="boy">Boy</label>
-                                            <input type="number" class="form-control" id="boy" name="boy" placeholder="Enter Length" step="0.01">
+                                            <input type="number" class="form-control" id="boy_sac" name="boy" placeholder="BOY 0.01" step="0.01">
                                         </div>
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
+                                            <label for="adet">En</label>
+                                            <input type="number" class="form-control" id="en_sac" name="en" placeholder="EN 0.01" step="0.01">
+                                        </div>
+                                        <div class="form-group col-md-4">
                                             <label for="adet">Adet</label>
-                                            <input type="number" class="form-control" id="adet" name="adet" placeholder="Enter Quantity">
+                                            <input type="number" class="form-control" id="adet_sac" name="adet" placeholder="ADET" step="0">
                                         </div>
                                     </div>
                                     <div class="form-row">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label for="kalite">Kalite</label>
-                                            <input type="text" class="form-control" id="kalite" name="kalite" placeholder="Enter Quality">
+                                            <input type="text" class="form-control" id="kalite_sac" name="kalite" placeholder="KALİTE GİRİN">
                                         </div>
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
+                                            <label for="tarih">Tarih</label>
+                                        <input type="datetime-local" class="form-control" id="tarih_sac" name="tarih">
+                                        </div>
+                                        <div class="form-group col-md-4">
                                             <label for="depo_secimi">Depo Secimi</label>
-                                            <input list="depo_secimi_list" class="form-control" id="depo_secimi" name="depo_secimi" placeholder="Select or enter Depot">
+                                            <input list="depo_secimi_list" class="form-control" id="depo_secimi_sac" name="depo_secimi" placeholder="Depo Seçimi">
                                             <datalist id="depo_secimi_list">
                                                 <option value="Saç Deposu">
                                                 <option value="Profil Deposu">
                                                 <option value="Boya Deposu">
+                                                <option value="Yatak Deposu">
+                                                <option value="Teknoloji Deposu">
+                                                <option value="Motor Deposu">
+                                                <option value="İşlem Parçaları Deposu">
                                             </datalist>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="tarih">Tarih</label>
-                                        <input type="datetime-local" class="form-control" id="tarih" name="tarih">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="submit"  class="btn btn-primary">Kayıt</button>
                                 </form>
                             </div>
                           </div>
@@ -107,6 +167,7 @@
                         <div class="card">
                             <div class="card-header" id="headingOne">
                               <h5 class="mb-0">
+                                <!---                 BOYA IMPORT                                  -->
                                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapseBoya" aria-expanded="false" aria-controls="collapseOne">
                                   Boya
                                 </button>
@@ -115,50 +176,83 @@
                         
                             <div id="collapseBoya" class="collapse " aria-labelledby="headingOne" data-parent="#accordion">
                               <div class="card-body">
-                                <form method="post">
+                                <div id="message_boya"></div>
+                                <form id="boyaimportForm" method="post">
                                     {% csrf_token %}
                                     <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="stok_kodu">Stok Kodu</label>
-                                            <input type="text" class="form-control" id="stok_kodu" name="stok_kodu" placeholder="Enter Stock Code">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label for="proje">Proje</label>
-                                            <input type="text" class="form-control" id="proje" name="proje" placeholder="Enter Project">
+                                            <label for="proje">Proje Kodu</label>
+                                            <select class="form-control" id="boya_proje_kodu" name="proje_kodu">
+                                                <option value="">Proje Kodu Seçin</option>
+                                                {% for proje_kodu in proje_kodlari %}
+                                                    <option value="{{ proje_kodu }}">{{ proje_kodu }}</option>
+                                                {% endfor %}
+                                            </select>
                                         </div>
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
+                                            <label for="musteri_adi">Müşteri Adı</label>
+                                            <select class="form-control" id="boya_musteri_adi" name="musteri_adi">
+                                                <option value="">Müşteri Seçin</option>
+                                                {% for musteri_adi in musteri_adlari %}
+                                                    <option value="{{ musteri_adi }}">{{ musteri_adi }}</option>
+                                                {% endfor %}
+                                            </select>
+                                    </div>
+                                          <div class="form-group col-md-4">
+                                            <label for="tarih">Tarih</label>
+                                        <input type="datetime-local" class="form-control" id="boya_tarih" name="tarih">
+                                    </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label for="proje">Cinsi</label>
+                                            <input type="text" class="form-control" id="boya_cinsi"  placeholder="Boya Cinsi">
+                                        </div>
+                                        <div class="form-group col-md-4">
                                             <label for="renk">Renk</label>
-                                            <input type="text" class="form-control" id="renk" name="renk" placeholder="Enter Color">
+                                            <input type="text" class="form-control" id="boya_renk" placeholder="Renk Giriniz">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="renk">Marka</label>
+                                            <input type="text" class="form-control" id="boya_marka"  placeholder="Marka Giriniz">
                                         </div>
                                     </div>
                                     <div class="form-row">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label for="miktar">Miktar</label>
-                                            <input type="number" class="form-control" id="miktar" name="miktar" placeholder="Enter Quantity" step="0.01">
+                                            <input type="text" class="form-control" id="boya_kalite" name="kalite" placeholder="Kalite" >
                                         </div>
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
+                                            <label for="miktar">Miktar</label>
+                                            <input type="number" class="form-control" id="boya_miktar" name="miktar" placeholder="Boya Miktar" step="1">
+                                        </div>
+                                        <div class="form-group col-md-4">
                                             <label for="depo_secimi">Depo Secimi</label>
-                                            <input list="depo_secimi_list" class="form-control" id="depo_secimi" name="depo_secimi" placeholder="Select or enter Depot">
+                                            <input list="depo_secimi_list" class="form-control" id="boya_depo_secimi" name="depo_secimi" placeholder="Depo Seçimi">
                                             <datalist id="depo_secimi_list">
                                                 <option value="Saç Deposu">
                                                 <option value="Profil Deposu">
                                                 <option value="Boya Deposu">
+                                                <option value="Yatak Deposu">
+                                                <option value="Teknoloji Deposu">
+                                                <option value="Motor Deposu">
+                                                <option value="İşlem Parçaları Deposu">
                                             </datalist>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="tarih">Tarih</label>
-                                        <input type="datetime-local" class="form-control" id="tarih" name="tarih">
+                                        <label for="renk">Giriş Açıklama</label>
+                                        <input type="text" class="form-control" id="boya_giris_aciklama" name="boya_giris_aciklama" placeholder="Açıklama Giriş">
                                     </div>
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </form>
                               </div>
                             </div>
                           </div>
-                        <div class="card">
-                          <div class="card-header" id="headingTwo">
+                           <!---                 YATAK IMPORT                                  -->
+                         <div class="card">
+                           <div class="card-header" id="headingTwo">
                             <h5 class="mb-0">
                               <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseYatak" aria-expanded="false" aria-controls="collapseTwo">
                                 Yatak
@@ -167,10 +261,79 @@
                           </div>
                           <div id="collapseYatak" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                             <div class="card-body">
-                              Yatak
+                                      <div id="message_yatak"></div>
+                                      <form id="yatakimportForm" method="post">
+                                          {% csrf_token %}
+                                          <div class="form-row">
+                                            {{form}}
+                                              <div class="form-group col-md-4">
+                                                  <label for="proje">Proje</label>
+                                                  <label for="proje">Proje Kodu</label>
+                                                  <select class="form-control" id="yatak_proje_kodu" name="proje_kodu">
+                                                      <option value="">Proje Kodu Seçin</option>
+                                                      {% for proje_kodu in proje_kodlari %}
+                                                          <option value="{{ proje_kodu }}">{{ proje_kodu }}</option>
+                                                      {% endfor %}
+                                                  </select>
+                                              </div>
+                                              <div class="form-group col-md-4">
+                                                  <label for="musteri_adi">Müşteri Adı</label>
+                                                  <select class="form-control" id="yatak_musteri_adi" name="musteri_adi">
+                                                      <option value="">Müşteri Seçin</option>
+                                                   
+                                                      {% for musteri_adi in musteri_adlari %}
+                                                          <option value="{{ musteri_adi }}">{{ musteri_adi }}</option>
+                                                      {% endfor %}
+                                                  </select>
+                                          </div>
+                                                <div class="form-group col-md-4">
+                                                  <label for="tarih">Tarih</label>
+                                              <input type="datetime-local" class="form-control" id="boya_tarih" name="tarih">
+                                          </div>
+                                          </div>
+                                          <div class="form-row">
+
+                                              <div class="form-group col-md-6">
+                                                  <label for="renk">Yatak Kodu</label>
+                                                  <input type="text" class="form-control" id="yatak_kodu" placeholder="Yatak Kodu Giriniz">
+                                              </div>
+                                              <div class="form-group col-md-6">
+                                                  <label for="renk">Marka</label>
+                                                  <input type="text" class="form-control" id="yatak_marka"  placeholder="Marka Giriniz">
+                                              </div>
+                                          </div>
+                                          <div class="form-row">
+                                              <div class="form-group col-md-6">
+                                                  <label for="miktar">ADET</label>
+                                                  <input type="number" class="form-control" id="yatak_miktar" name="adet" placeholder="Yatak Adet" step="1">
+                                              </div>
+                                              <div class="form-group col-md-6">
+                                                  <label for="depo_secimi">Depo Secimi</label>
+                                                  <input list="depo_secimi_list" class="form-control" id="yatak_depo_secimi" name="depo_secimi" placeholder="Depo Seçimi">
+                                                  <datalist id="depo_secimi_list">
+                                                      <option value="Saç Deposu">
+                                                      <option value="Profil Deposu">
+                                                      <option value="Boya Deposu">
+                                                      <option value="Yatak Deposu">
+                                                      <option value="Teknoloji Deposu">
+                                                      <option value="Motor Deposu">
+                                                      <option value="İşlem Parçaları Deposu">
+                                                  </datalist>
+                                              </div>
+                                          </div>
+                                          
+                                          <div class="form-group">
+                                              <label for="renk">Giriş Açıklama</label>
+                                              <input type="text" class="form-control" id="yatak_giris_aciklama" name="boya_giris_aciklama" placeholder="Açıklama Giriş">
+                                          </div>
+                                          <button type="submit" class="btn btn-primary">Save</button>
+                                      </form>
+                                 
                             </div>
                           </div>
                         </div>
+
+                            <!---                 MOTOR IMPORT                                  -->
                         <div class="card">
                           <div class="card-header" id="headingThree">
                             <h5 class="mb-0">
@@ -181,49 +344,80 @@
                           </div>
                           <div id="collapsemotor" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                             <div class="card-body">
-                                <form method="post">
+                                <div id="message_motor"></div>
+                                <form id="motorimportForm" method="post">
                                     {% csrf_token %}
                                     <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="stok_kodu">Stok Kodu</label>
-                                            <input type="text" class="form-control" id="stok_kodu" name="stok_kodu" placeholder="Enter Stock Code">
+                                        <div class="form-group col-md-4">
+                                            <label for="proje">Proje</label>
+                                            <label for="proje">Proje Kodu</label>
+                                            <select class="form-control" id="motor_proje_kodu" name="proje_kodu">
+                                                <option value="">Proje Kodu Seçin</option>
+                                                {% for proje_kodu in proje_kodlari %}
+                                                    <option value="{{ proje_kodu }}">{{ proje_kodu }}</option>
+                                                {% endfor %}
+                                            </select>
                                         </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="musteri_adi">Müşteri Adı</label>
+                                            <select class="form-control" id="motor_musteri_adi" name="musteri_adi">
+                                                <option value="">Müşteri Seçin</option>
+                                            
+                                                {% for musteri_adi in musteri_adlari %}
+                                                    <option value="{{ musteri_adi }}">{{ musteri_adi }}</option>
+                                                {% endfor %}
+                                            </select>
                                     </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="model">Model</label>
-                                            <input type="text" class="form-control" id="model" name="model" placeholder="Enter Model">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="guc">Guc</label>
-                                            <input type="number" class="form-control" id="guc" name="guc" placeholder="Enter Power" step="0.01">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="adet">Adet</label>
-                                            <input type="number" class="form-control" id="adet" name="adet" placeholder="Enter Quantity">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="depo_secimi">Depo Secimi</label>
-                                            <input list="depo_secimi_list" class="form-control" id="depo_secimi" name="depo_secimi" placeholder="Select or enter Depot">
-                                            <datalist id="depo_secimi_list">
-                                                <option value="Saç Deposu">
-                                                <option value="Profil Deposu">
-                                                <option value="Boya Deposu">
-                                            </datalist>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
+                                    <div class="form-group col-md-4">
                                         <label for="tarih">Tarih</label>
-                                        <input type="datetime-local" class="form-control" id="tarih" name="tarih">
+                                        <input type="datetime-local" class="form-control" id="motor_tarih" name="tarih">
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                </form>
-                            </div>
+                                </div>
+                                <div class="form-row">
+                                   
+                                        <div class="form-group col-md-4">
+                                            <label for="stok_kodu">KW</label>
+                                            <input type="number" class="form-control" id="motor_kw" name="stok_kodu" placeholder="KW Giriniz" step="0.01">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="model">Marka</label>
+                                            <input type="text" class="form-control" id="motor_marka" name="model" placeholder="Marka">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="devir">Devir</label>
+                                                        <input type="number" class="form-control" id="motor_devir" name="guc" placeholder="Devir" step="0.01">
+                                                    </div>
+                                                </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="adet">Adet</label>
+                                                <input type="number" class="form-control" id="motor_miktar" name="miktar" placeholder="Motor Adet">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="depo_secimi">Depo Secimi</label>
+                                                <input list="depo_secimi_list" class="form-control" id="motor_depo_secimi" name="depo_secimi" placeholder="Depo Seçimi">
+                                                <datalist id="depo_secimi_list">
+                                                    <option value="Saç Deposu">
+                                                    <option value="Profil Deposu">
+                                                    <option value="Boya Deposu">
+                                                    <option value="Yatak Deposu">
+                                                    <option value="Teknoloji Deposu">
+                                                    <option value="Motor Deposu">
+                                                    <option value="İşlem Parçaları Deposu">
+                                                </datalist>
+                                            </div>
+                                         </div>
+                                         <div class="form-group">
+                                            <label for="renk">Giriş Açıklama</label>
+                                            <input type="text" class="form-control" id="yatak_giris_aciklama" name="boya_giris_aciklama" placeholder="Açıklama Giriş">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </form>
+                                 </div>      
+                               </div>
                           </div>
-                        </div>
-                        <div class="card">
+                               <!---                 Profil IMPORT                                  -->
+                         <div class="card">
                             <div class="card-header" id="headingThree">
                               <h5 class="mb-0">
                                 <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseprofil" aria-expanded="false" aria-controls="collapseThree">
@@ -233,107 +427,162 @@
                             </div>
                             <div id="collapseprofil" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                               <div class="card-body">
-                                <form method="post"">
+                                <div id="message_profil"></div>
+                                <form id="profilimportForm" method="post">
                                     {% csrf_token %}
                                     <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="stok_kodu">Stok Kodu</label>
-                                            <input type="text" class="form-control" id="stok_kodu" name="stok_kodu" placeholder="Enter Stock Code">
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label for="proje">Proje</label>
-                                            <input type="text" class="form-control" id="proje" name="proje" placeholder="Enter Project">
+                                            <label for="proje">Proje Kodu</label>
+                                            <select class="form-control" id="profil_proje_kodu" name="proje_kodu">
+                                                <option value="">Proje Kodu Seçin</option>
+                                                {% for proje_kodu in proje_kodlari %}
+                                                    <option value="{{ proje_kodu }}">{{ proje_kodu }}</option>
+                                                {% endfor %}
+                                            </select>
                                         </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="kalinlik">Kalinlik</label>
-                                            <input type="number" class="form-control" id="kalinlik" name="kalinlik" placeholder="Enter Thickness" step="0.01">
-                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="musteri_adi">Müşteri Adı</label>
+                                            <select class="form-control" id="profil_musteri_adi" name="musteri_adi">
+                                                <option value="">Müşteri Seçin</option>
+                                                {% for musteri_adi in musteri_adlari %}
+                                                    <option value="{{ musteri_adi }}">{{ musteri_adi }}</option>
+                                                {% endfor %}
+                                            </select>
                                     </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="tarih">Tarih</label>
+                                        <input type="datetime-local" class="form-control"  id="profil_tarih" name="tarih">
+                                    </div>
+                                </div>
                                     <div class="form-row">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label for="boy">Boy</label>
-                                            <input type="number" class="form-control" id="boy" name="boy" placeholder="Enter Length" step="0.01">
+                                            <input type="number" class="form-control" id="profil_boy" name="boy" placeholder="Enter Length" step="0.01">
                                         </div>
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label for="adet">Adet</label>
-                                            <input type="number" class="form-control" id="adet" name="adet" placeholder="Enter Quantity">
+                                            <input type="number" class="form-control" id="profil_adet" name="adet" placeholder="Enter Quantity">
                                         </div>
+                                        <div class="form-group col-md-4">
+                                        <label for="kalinlik">Kalinlik</label>
+                                        <input type="number" class="form-control" id="profil_kalinlik" name="kalinlik" placeholder="KALINLIK 0.01" step="0.01">
+                                    </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             <label for="kalite">Kalite</label>
-                                            <input type="text" class="form-control" id="kalite" name="kalite" placeholder="Enter Quality">
+                                            <input type="text" class="form-control" id="profil_kalite" name="kalite" placeholder="Profil Kalite">
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="depo_secimi">Depo Secimi</label>
-                                            <input list="depo_secimi_list" class="form-control" id="depo_secimi" name="depo_secimi" placeholder="Select or enter Depot">
+                                            <input list="depo_secimi_list" class="form-control" id="profil_depo_secimi" name="depo_secimi" placeholder="Depo Seçimi">
                                             <datalist id="depo_secimi_list">
                                                 <option value="Saç Deposu">
                                                 <option value="Profil Deposu">
                                                 <option value="Boya Deposu">
+                                                <option value="Yatak Deposu">
+                                                <option value="Teknoloji Deposu">
+                                                <option value="Motor Deposu">
+                                                <option value="İşlem Parçaları Deposu">
                                             </datalist>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="tarih">Tarih</label>
-                                        <input type="datetime-local" class="form-control" id="tarih" name="tarih">
+                                        <label for="renk">Giriş Açıklama</label>
+                                        <input type="text" class="form-control" id="profil_giris_aciklama" name="profil_giris_aciklama" placeholder="Açıklama Giriş">
                                     </div>
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </form>
                               </div>
                             </div>
                           </div>
-                      </div>
-                      <div class="card">
+                     
+
+                       <!---                 ISLEME IMPORT                                  -->
+                       <div class="card">
                         <div class="card-header" id="headingThree">
                           <h5 class="mb-0">
                             <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseislem" aria-expanded="false" aria-controls="collapseThree">
-                              İşlem Parçaları
+                              İşleme Parçaları
                             </button>
                           </h5>
                         </div>
                         <div id="collapseislem" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                           <div class="card-body">
-                            <form method="post">
+                            <div id="message_isleme"></div>
+                            <form id="islemimportForm" method="post">
                                 {% csrf_token %}
                                 <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="stok_kodu">Stok Kodu</label>
-                                        <input type="text" class="form-control" id="stok_kodu" name="stok_kodu" placeholder="Enter Stock Code">
+                                    <div class="form-group col-md-4">
+                                        <label for="proje">Proje</label>
+                                        <label for="proje">Proje Kodu</label>
+                                        <select class="form-control" id="islem_proje_kodu" name="proje_kodu">
+                                            <option value="">Proje Kodu Seçin</option>
+                                            {% for proje_kodu in proje_kodlari %}
+                                                <option value="{{ proje_kodu }}">{{ proje_kodu }}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="musteri_adi">Müşteri Adı</label>
+                                        <select class="form-control" id="islem_musteri_adi" name="musteri_adi">
+                                            <option value="">Müşteri Seçin</option>
+                                            {% for musteri_adi in musteri_adlari %}
+                                                <option value="{{ musteri_adi }}">{{ musteri_adi }}</option>
+                                            {% endfor %}
+                                        </select>
                                 </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="islem_tipi">Islem Tipi</label>
-                                        <input type="text" class="form-control" id="islem_tipi" name="islem_tipi" placeholder="Enter Process Type">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="miktar">Miktar</label>
-                                        <input type="number" class="form-control" id="miktar" name="miktar" placeholder="Enter Quantity" step="0.01">
-                                    </div>
+                                <div class="form-group col-md-4">
+                                    <label for="tarih">Tarih</label>
+                                    <input type="datetime-local" class="form-control"  id="islem_tarih" name="tarih">
                                 </div>
-                                <div class="form-row">
+                            </div>
+                                  <div class="form-row">
+                               
+                                    <div class="form-group col-md-6">
+                                        <label for="islem_tipi">Cinsi</label>
+                                        <input type="text" class="form-control" id="islem_cinsi" name="yer" placeholder="Cinsini Belirtiniz">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="miktar">Adet</label>
+                                        <input type="number" class="form-control" id="islem_adet" placeholder="Adet Giriniz" step="0">
+                                    </div>
+                                    </div>
+                                    <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="depo_secimi">Depo Secimi</label>
-                                        <input list="depo_secimi_list" class="form-control" id="depo_secimi" name="depo_secimi" placeholder="Select or enter Depot">
+                                        <input list="depo_secimi_list" class="form-control" id="islem_depo_secimi" name="depo_secimi" placeholder="Depo Seçimi">
                                         <datalist id="depo_secimi_list">
                                             <option value="Saç Deposu">
                                             <option value="Profil Deposu">
                                             <option value="Boya Deposu">
+                                            <option value="Yatak Deposu">
+                                            <option value="Teknoloji Deposu">
+                                            <option value="Motor Deposu">
+                                            <option value="İşlem Parçaları Deposu">
                                         </datalist>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="tarih">Tarih</label>
-                                        <input type="datetime-local" class="form-control" id="tarih" name="tarih">
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </form>
-                          </div>
-                        </div>
+                                     </div>
+                                     <div class="form-group col-md-6">
+                                        <label >Kullanılacak Yer</label>
+                                        <input type="text" class="form-control" id="islem_yer" placeholder="Kullanılacak Yer Giriniz">
+                                     </div>
+                                     </div>
+                         
+                                 <div class="form-group">
+                                    <label for="renk">Giriş Açıklama</label>
+                                    <input type="text" class="form-control" id="isleme_giris_aciklama" name="islem_giris_aciklama" placeholder="Açıklama Giriş">
+                                  </div>
+                                 <button type="submit" class="btn btn-primary">Save</button>
+                             </form>
+                        
                       </div>
+                    </div>
+                </div>
+                    
+                
+
+                    <!-- Teknoloji IMPORT-->
                       <div class="card">
                         <div class="card-header" id="headingThree">
                           <h5 class="mb-0">
@@ -344,39 +593,67 @@
                         </div>
                         <div id="collapseteknolojik" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                           <div class="card-body">
-                            <form method="post">
+                            <div id="message_teknoloji"></div>
+                            <form id="teknolojimportForm" method="post">
                                 
                                 <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="stok_kodu">Stok Kodu</label>
-                                        <input type="text" class="form-control" id="stok_kodu" name="stok_kodu" placeholder="Enter Stock Code">
+                                    <div class="form-group col-md-4">
+                                        <label for="proje">Proje</label>
+                                        <label for="proje">Proje Kodu</label>
+                                        <select class="form-control" id="teknoloji_proje_kodu" name="proje_kodu">
+                                            <option value="">Proje Kodu Seçin</option>
+                                            {% for proje_kodu in proje_kodlari %}
+                                                <option value="{{ proje_kodu }}">{{ proje_kodu }}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="musteri_adi">Müşteri Adı</label>
+                                        <select class="form-control" id="teknoloji_musteri_adi" name="musteri_adi">
+                                            <option value="">Müşteri Seçin</option>
+                                            {% for musteri_adi in musteri_adlari %}
+                                                <option value="{{ musteri_adi }}">{{ musteri_adi }}</option>
+                                            {% endfor %}
+                                        </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="tarih">Tarih</label>
+                                    <input type="datetime-local" class="form-control"  id="teknoloji_tarih" name="tarih">
+                                </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <label for="malzeme_tipi">Malzeme Tipi</label>
-                                        <input type="text" class="form-control" id="malzeme_tipi" name="malzeme_tipi" placeholder="Enter Material Type">
+                                        <label for="malzeme_tipi">Malzeme Türü</label>
+                                        <input type="text" class="form-control" id="teknoloji_malzeme_turu"  placeholder="Malzeme Türü">
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label for="miktar">Miktar</label>
-                                        <input type="number" class="form-control" id="miktar" name="miktar" placeholder="Enter Quantity" step="0.01">
+                                        <label for="malzeme_tipi">Malzeme Adı</label>
+                                        <input type="text" class="form-control" id="teknoloji_malzeme_adi"  placeholder="Malzeme Adı">
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="depo_secimi">Depo Secimi</label>
-                                        <input list="depo_secimi_list" class="form-control" id="depo_secimi" name="depo_secimi" placeholder="Depo Seçiniz">
+                                        <input list="depo_secimi_list" class="form-control" id="teknoloji_depo_secimi" name="depo_secimi" placeholder="Depo Seçimi">
                                         <datalist id="depo_secimi_list">
                                             <option value="Saç Deposu">
                                             <option value="Profil Deposu">
                                             <option value="Boya Deposu">
+                                            <option value="Yatak Deposu">
+                                            <option value="Teknoloji Deposu">
+                                            <option value="Motor Deposu">
+                                            <option value="İşlem Parçaları Deposu">
                                         </datalist>
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label for="tarih">Tarih</label>
-                                        <input type="datetime-local" class="form-control" id="tarih" name="tarih">
+                                        <label for="miktar">Adet</label>
+                                        <input type="number" class="form-control" id="teknoloji_adet" name="miktar" placeholder="Enter Quantity" step="0">
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label for="renk">Giriş Açıklama</label>
+                                    <input type="text" class="form-control" id="teknoloji_giris_aciklama" name="islem_giris_aciklama" placeholder="Açıklama Giriş">
+                                  </div>
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </form>
                           </div>
@@ -398,35 +675,234 @@
     
         <script>
             $(document).ready(function() {
-                var currentCell;
+                
 
                 // Her hücreye tıklanabilirliği ekleyin
-                $(".editable").click(function() {
-                    currentCell = $(this);
-                    $("#modalInput").val(currentCell.text());
-                    $("#editModal").modal("show");
+               // $(".editable").click(function() {
+               //     currentCell = $(this);
+               //     $("#modalInput").val(currentCell.text());
+               //     $("#editModal").modal("show");
+               // });
+
+                var csrftoken = $('[name=csrfmiddlewaretoken]').val();
+                $('#sacimportForm').on('submit', function(event) {
+                    event.preventDefault();
+                     console.log($('#musteri_adi_sac').val(),$('#proje_kodu_sac').val());
+                     $.ajax({
+                         url: '{% url "sac_kayit_ajax" %}',
+                         method: "POST",
+                         headers: { 'X-CSRFToken': csrftoken },
+                         data: {
+                            'musteri': $('#musteri_adi_sac').val(),
+                            'projekodu': $('#proje_kodu_sac').val(),
+                            'en': $('#en_sac').val(),
+                            'boy': $('#boy_sac').val(),
+                            'kalinlik': $('#kalinlik_sac').val(),
+                            'kalite': $('#kalite_sac').val(),
+                            'giris_aciklama': $('#giris_aciklama_sac').val(),
+                            'olusturma_tarih': $('#tarih_sac').val(),
+                            'depo_secimi': $('#depo_secimi_sac').val(),
+                            'adet': $('#adet_sac').val(),
+                         },
+                         success: function(response) {
+                     $('#message').html('<div class="alert ' + (response.success ? 'success' : 'error') + '">' + response.message +  response.stok_kodu +'</div>' );
+                    if (response.success) {
+                        $('#sacimportForm')[0].reset();
+                    }
+                     },
+                    error: function(response) {
+                     $('#message').html('<div class="alert error">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                     }
+                     });
+               
                 });
 
-                // Değişiklikleri kaydetme
-                $("#saveBtn").click(function() {
-                    var newValue = $("#modalInput").val();
-                    currentCell.text(newValue);
-                    $("#editModal").modal("hide");
-
-                    // Güncellenen veriyi sunucuya göndermek için AJAX kullanabilirsiniz
-                    // $.ajax({
-                    //     url: "/update-cell",
-                    //     method: "POST",
-                    //     data: {
-                    //         column: currentCell.index(),
-                    //         row: currentCell.closest("tr").index(),
-                    //         value: newValue
-                    //     },
-                    //     success: function(response) {
-                    //         console.log("Başarıyla güncellendi!");
-                    //     }
-                    // });
+                $('#boyaimportForm').on('submit', function(event) {
+                    event.preventDefault();
+                     //console.log($('#musteri_adi_sac').val(),$('#proje_kodu_sac').val());
+                     $.ajax({
+                         url: '{% url "boya_kayit_ajax" %}',
+                         method: "POST",
+                         headers: { 'X-CSRFToken': csrftoken },
+                         data: {
+                            'musteri': $('#boya_musteri_adi').val(),
+                            'projekodu': $('#boya_proje_kodu').val(),
+                            'cinsi': $('#boya_cinsi').val(),
+                            'renk': $('#boya_renk').val(),
+                            'marka': $('#boya_marka').val(),
+                            'giris_aciklama': $('#boya_giris_aciklama').val(),
+                            'olusturma_tarihi': $('#boya_tarih').val(),
+                            'depo_secimi': $('#boya_depo_secimi').val(),
+                            'adet': $('#boya_miktar').val(),
+                            'kalite': $('#boya_kalite').val(),
+                         },
+                         success: function(response) {
+                     $('#message_boya').html('<div class="alert ' + (response.success ? 'success' : 'error') + '">' + response.message +  response.stok_kodu +'</div>' );
+                    if (response.success) {
+                        $('#boyaimportForm')[0].reset();
+                    }
+                     },
+                    error: function(response) {
+                     $('#message_boya').html('<div class="alert error">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                     }
+                     });
+               
                 });
+
+                $('#yatakimportForm').on('submit', function(event) {
+                    event.preventDefault();
+                     //console.log($('#musteri_adi_sac').val(),$('#proje_kodu_sac').val());
+                     $.ajax({
+                         url: '{% url "yatak_kayit_ajax" %}',
+                         method: "POST",
+                         headers: { 'X-CSRFToken': csrftoken },
+                         data: {
+                            'musteri': $('#yatak_musteri_adi').val(),
+                            'projekodu': $('#yatak_proje_kodu').val(),
+                            'yatak_kodu': $('#yatak_kodu').val(),
+                            'marka': $('#yatak_marka').val(),
+                            'giris_aciklama': $('#yatak_giris_aciklama').val(),
+                            'olusturma_tarihi': $('#yatak_tarih').val(),
+                            'depo_secimi': $('#yatak_depo_secimi').val(),
+                            'adet': $('#yatak_miktar').val(),
+                         },
+                         success: function(response) {
+                     $('#message_yatak').html('<div class="alert ' + (response.success ? 'success' : 'error') + '">' + response.message +  response.stok_kodu +'</div>' );
+                    if (response.success) {
+                        $('#yatakimportForm')[0].reset();
+                    }
+                     },
+                    error: function(response) {
+                     $('#message_yatak').html('<div class="alert error">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                     }
+                     });
+               
+                 });
+                 $('#motorimportForm').on('submit', function(event) {
+                    event.preventDefault();
+                     //console.log($('#musteri_adi_sac').val(),$('#proje_kodu_sac').val());
+                     $.ajax({
+                         url: '{% url "motor_kayit_ajax" %}',
+                         method: "POST",
+                         headers: { 'X-CSRFToken': csrftoken },
+                         data: {
+                            'musteri': $('#motor_musteri_adi').val(),
+                            'projekodu': $('#motor_proje_kodu').val(),
+                            'kw': $('#motor_kw').val(),
+                            'devir': $('#motor_devir').val(),
+                            'marka': $('#motor_marka').val(),
+                            'giris_aciklama': $('#motor_giris_aciklama').val(),
+                            'olusturma_tarihi': $('#motor_tarih').val(),
+                            'depo_secimi': $('#motor_depo_secimi').val(),
+                            'adet': $('#motor_miktar').val(),
+                         },
+                         success: function(response) {
+                     $('#message_motor').html('<div class="alert ' + (response.success ? 'success' : 'error') + '">' + response.message +  response.stok_kodu +'</div>' );
+                    if (response.success) {
+                        $('#motorimportForm')[0].reset();
+                    }
+                     },
+                    error: function(response) {
+                     $('#message_motor').html('<div class="alert error">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                     }
+                     });
+               
+                 });
+                
+                 $('#profilimportForm').on('submit', function(event) {
+                    event.preventDefault();
+                     //console.log($('#musteri_adi_sac').val(),$('#proje_kodu_sac').val());
+                     $.ajax({
+                         url: '{% url "profil_kayit_ajax" %}',
+                         method: "POST",
+                         headers: { 'X-CSRFToken': csrftoken },
+                         data: {
+                            'musteri': $('#profil_musteri_adi').val(),
+                            'projekodu': $('#profil_proje_kodu').val(),
+                            'en': $('#profil_en').val(),
+                            'boy': $('#profil_boy').val(),
+                            'kalinlik': $('#profil_kalinlik').val(),
+                            'kalite': $('#profil_kalite').val(),
+                            'giris_aciklama': $('#profil_giris_aciklama').val(),
+                            'olusturma_tarih': $('#profil_tarih').val(),
+                            'depo_secimi': $('#profil_depo_secimi').val(),
+                            'adet': $('#profil_adet').val(),
+                         },
+                         success: function(response) {
+                     $('#message_profil').html('<div class="alert ' + (response.success ? 'success' : 'error') + '">' + response.message +  response.stok_kodu +'</div>' );
+                    if (response.success) {
+                        $('#profilimportForm')[0].reset();
+                    }
+                     },
+                    error: function(response) {
+                     $('#message_profil').html('<div class="alert error">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                     }
+                     });
+               
+                 });
+
+                 $('#islemimportForm').on('submit', function(event) {
+                    event.preventDefault();
+                     //console.log($('#musteri_adi_sac').val(),$('#proje_kodu_sac').val());
+                     $.ajax({
+                         url: '{% url "isleme_kayit_ajax" %}',
+                         method: "POST",
+                         headers: { 'X-CSRFToken': csrftoken },
+                         data: {
+                            'musteri': $('#islem_musteri_adi').val(),
+                            'projekodu': $('#islem_proje_kodu').val(),
+                            'cinsi': $('#islem_cinsi').val(),
+                            'adet': $('#islem_adet').val(),
+                            'yer': $('#islem_yer').val(),
+                            'giris_aciklama': $('#islem_giris_aciklama').val(),
+                            'olusturma_tarih': $('#islem_tarih').val(),
+                            'depo_secimi': $('#islem_depo_secimi').val(),
+                            'adet': $('#islem_adet').val(),
+                         },
+                         success: function(response) {
+                     $('#message_isleme').html('<div class="alert ' + (response.success ? 'success' : 'error') + '">' + response.message +  response.stok_kodu +'</div>' );
+                    if (response.success) {
+                        $('#islemimportForm')[0].reset();
+                    }
+                     },
+                    error: function(response) {
+                     $('#message_isleme').html('<div class="alert error">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                     }
+                     });
+               
+                 });
+
+                 $('#teknolojimportForm').on('submit', function(event) {
+                    event.preventDefault();
+                     //console.log($('#musteri_adi_sac').val(),$('#proje_kodu_sac').val());
+                     $.ajax({
+                         url: '{% url "isleme_kayit_ajax" %}',
+                         method: "POST",
+                         headers: { 'X-CSRFToken': csrftoken },
+                         data: {
+                            'musteri': $('#teknoloji_musteri_adi').val(),
+                            'projekodu': $('#teknoloji_proje_kodu').val(),
+                            'malzeme_tipi': $('#teknoloji_malzeme_turu').val(),
+                            'malzeme_adi': $('#teknoloji_malzeme_adi').val(),
+                            'adet': $('#teknoloji_adet').val(),
+                            'giris_aciklama': $('#teknoloji_giris_aciklama').val(),
+                            'olusturma_tarih': $('#teknoloji_tarih').val(),
+                            'depo_secimi': $('#teknoloji_depo_secimi').val(),
+                         },
+                         success: function(response) {
+                     $('#message_teknoloji').html('<div class="alert ' + (response.success ? 'success' : 'error') + '">' + response.message +  response.stok_kodu +'</div>' );
+                    if (response.success) {
+                        $('#teknolojimportForm')[0].reset();
+                    }
+                     },
+                    error: function(response) {
+                     $('#message_teknoloji').html('<div class="alert error">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                     }
+                     });
+               
+                 });
+
+
             });
             </script>
     </script>

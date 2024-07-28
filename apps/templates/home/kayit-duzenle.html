@@ -26,6 +26,41 @@
                 margin-left: 10px;
             }
         </style>
+        <style>
+
+            #message {
+                margin-top: 20px;
+                text-align: center;
+                font-size: 16px;
+            }
+            
+            .alert {
+                padding: 10px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+            }
+            
+            .alert.success {
+                background-color: #d4edda;
+                color: #155724;
+            }
+            
+            .alert.error {
+                background-color: #f8d7da;
+                color: #721c24;
+            }
+            
+            .alert.info {
+                background-color: #cce5ff;
+                color: #004085;
+            }
+            
+            .alert.warning {
+                background-color: #fff3cd;
+                color: #856404;
+            }
+            </style>
+        
         </head>
 
             
@@ -39,6 +74,7 @@
                     </ol>
 
                     <div class="card mb-4">
+                        <div id="message"></div>
                         <div class="card-header">
                             <i class="fas fa-table me-1"></i>
                             Customer Table
@@ -47,30 +83,45 @@
                             <table id="datatablesSimple">
                                 <thead>
                                     <tr>
-                                        <th>Customer Name</th>
-                                        <th>Customer Code</th>
-                                        <th>Address</th>
+                                        <th>Müşteri ID</th>
+                                        <th>Müşteri İsmi</th>
+                                        <th>Proje Kodu</th>
+                                        <th>Proje Genel</th>
+                                        <th>Açıklama</th>
+                                        <th>Adres</th>
                                         <th>Phone</th>
                                         <th>Email</th>
+                                        <th>Tarih</th>
+                                        <th>Oluşturan Kişi</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <th>Customer Name</th>
-                                        <th>Customer Code</th>
-                                        <th>Address</th>
+                                        <th>Müşteri ID</th>
+                                        <th>Müşteri İsmi</th>
+                                        <th>Proje Kodu</th>
+                                        <th>Proje Genel</th>
+                                        <th>Açıklama</th>
+                                        <th>Adres</th>
                                         <th>Phone</th>
                                         <th>Email</th>
+                                        <th>Tarih</th>
+                                        <th>Oluşturan Kişi</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
                                     {% for col in data %}
-                                    <tr>
-                                        <td class="editable">{{ col.musteri_adi }}</td>
-                                        <td class="editable">{{ col.musteri_kodu }}</td>
-                                        <td class="editable">{{ col.adres }}</td>
-                                        <td class="editable">{{ col.telefon }}</td>
-                                        <td class="editable">{{ col.email }}</td>
+                                    <tr musteri_id="{{ col.musteri_id }}">
+                                        <td >{{ col.musteri_id }}</td>
+                                        <td id="musteri_adi" class="editable">{{ col.musteri_adi }}</td>
+                                        <td id="proje_kodu" class="editable">{{ col.proje_kodu }}</td>
+                                        <td id="proje_genel" class="editable">{{ col.proje_genel }}</td>
+                                        <td id="aciklama" class="editable">{{ col.aciklama }}</td>
+                                        <td id="adres" class="editable">{{ col.adres }}</td>
+                                        <td id="telefon" class="editable">{{ col.telefon }}</td>
+                                        <td id="email" class="editable">{{ col.email }}</td>
+                                        <td >{{ col.proje_tarihi }}</td>
+                                        <td >{{ col.created_by }}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -92,7 +143,7 @@
                                 <input type="text" class="form-control" id="modalInput">
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="Closebtn">Close</button>
                                 <button type="button" class="btn btn-primary" id="saveBtn">Save</button>
                             </div>
                         </div>
@@ -100,7 +151,7 @@
                 </div>
             </main>
       
-    
+    {{msg}}
 
 
 
@@ -112,7 +163,14 @@
         <script>
             $(document).ready(function() {
                 var currentCell;
-
+                
+                $("#Closebtn").click(function(){
+            
+                  
+                    // Tüm açık modalları kapat
+                    $('.modal').modal('hide');
+               
+            });
                 // Her hücreye tıklanabilirliği ekleyin
                 $(".editable").click(function() {
                     currentCell = $(this);
@@ -122,23 +180,38 @@
 
                 // Değişiklikleri kaydetme
                 $("#saveBtn").click(function() {
+                    var csrftoken = $('[name=csrfmiddlewaretoken]').val();
+                    console.log("test")
                     var newValue = $("#modalInput").val();
                     currentCell.text(newValue);
-                    $("#editModal").modal("hide");
+                    var musteriId = currentCell.closest("tr").attr("musteri_id");
+                    //console.log(musteriId)
+                    var cellId = currentCell.attr("id");
 
-                    // Güncellenen veriyi sunucuya göndermek için AJAX kullanabilirsiniz
-                    // $.ajax({
-                    //     url: "/update-cell",
-                    //     method: "POST",
-                    //     data: {
-                    //         column: currentCell.index(),
-                    //         row: currentCell.closest("tr").index(),
-                    //         value: newValue
-                    //     },
-                    //     success: function(response) {
-                    //         console.log("Başarıyla güncellendi!");
-                    //     }
-                    // });
+                    $("#editModal").modal("hide");
+                    
+                     
+                     $.ajax({
+                         url: '{% url "musteri_kaydi_duzenle" %}',
+                         method: "POST",
+                         headers: { 'X-CSRFToken': csrftoken },
+                         data: {
+                             column: currentCell.index(),
+                             row: currentCell.closest("tr").index(),
+                             value: newValue,
+                             musteri_id:  musteriId,
+                             cellId: cellId
+                            
+                         },
+                         success: function(response) {
+                            console.log(response)
+                            $('#message').html('<div class="alert ' + (response.success ? 'success' : 'error') + '">' + response.message + '</div>');
+                            setTimeout(function() {location.reload();}, 5000);
+                         },
+                         error: function(response) {
+                            $('#message').html('<div class="alert ' + (response.success ? 'success' : 'error') + '">' + response.message + '</div>');
+                     }
+                     });
                 });
             });
             </script>
