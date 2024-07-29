@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
-class YourAppConfig(AppConfig):
+class ERP(AppConfig):
     name = 'home'
 
     def ready(self):

@@ -37,10 +37,10 @@ def fetch_consolidated_data(request):
             fields = model._meta.get_fields()
             field_names = [field.name for field in fields]
             
-            # `proje_kodu` alanının gerekli olduğunu varsayarak, sadece bu alanın mevcut olduğu modelleri ele al
             if 'projekodu' in field_names:  # ForeignKey'nin `projekodu` ile alındığını varsayıyoruz
                 # Veri çekme işlemi
                 columns = [
+                    'depo_secimi' if 'depo_secimi' in field_names else None,
                     'projekodu' if 'projekodu' in field_names else None,
                     'stok_kodu' if 'stok_kodu' in field_names else None,
                     'musteri' if 'musteri' in field_names else None
@@ -50,15 +50,15 @@ def fetch_consolidated_data(request):
                 # İlişkili projelerle veri çekme
                 table_data = model.objects.all().select_related('projekodu').values(*columns)
 
-                # Null değerleri kaldır
                 for item in table_data:
                     clean_item = {
-                        'tablo': table_name,
+                        'depo_secimi':item.get('depo_secimi', 'N/A'), 
                         'proje_kodu': item.get('projekodu', 'N/A'),  # ForeignKey'den veri çekiyoruz
                         'stok_kodu': item.get('stok_kodu', 'N/A'),
                         'musteri': item.get('musteri', 'N/A'),
                     }
                     data.append(clean_item)
+                    print(clean_item)
                     
         except Exception as model_err:
             print(f"Error fetching data from {table_name}: {model_err}")
@@ -621,3 +621,32 @@ def fetch_log_data(request):
 
 
 
+from .tables import SacTable, BoyaTable, YatakTable, MotorReduktorTable, ProfilTable, IslemeTable, TeknolojikAlimTable
+
+def sac_list(request):
+    table = SacTable(Sac.objects.all())
+    return render(request, 'home/sac_list.html', {'table': table})
+
+def boya_list(request):
+    table = BoyaTable(Boya.objects.all())
+    return render(request, 'home/boya_list.html', {'table': table})
+
+def yatak_list(request):
+    table = YatakTable(Yatak.objects.all())
+    return render(request, 'home/yatak_list.html', {'table': table})
+
+def motor_reduktor_list(request):
+    table = MotorReduktorTable(MotorReduktor.objects.all())
+    return render(request, 'home/motor_reduktor_list.html', {'table': table})
+
+def profil_list(request):
+    table = ProfilTable(Profil.objects.all())
+    return render(request, 'home/profil_list.html', {'table': table})
+
+def isleme_list(request):
+    table = IslemeTable(Isleme.objects.all())
+    return render(request, 'home/isleme_list.html', {'table': table})
+
+def teknolojik_alim_list(request):
+    table = TeknolojikAlimTable(TeknolojikAlim.objects.all())
+    return render(request, 'home/teknolojik_alim_list.html', {'table': table})

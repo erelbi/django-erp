@@ -30,6 +30,13 @@ urlpatterns = [
     path('api/consolidated-data/', views.fetch_consolidated_data, name='fetch_consolidated_data'),
     path('logs', views.logshow, name='logs'),
     path('api/log-data/', views.fetch_log_data, name='fetch_log_data'),
+    path('sac', views.sac_list, name='sac_list'),
+    path('boya', views.boya_list, name='boya_list'),
+    path('yatak', views.yatak_list, name='yatak_list'),
+    path('motor-reduktor', views.motor_reduktor_list, name='motor_reduktor_list'),
+    path('profil', views.profil_list, name='profil_list'),
+    path('isleme', views.isleme_list, name='isleme_list'),
+    path('teknolojik-alim', views.teknolojik_alim_list, name='teknolojik_alim_list'),
 
 
     # Matches any html file

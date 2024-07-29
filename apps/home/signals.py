@@ -24,7 +24,7 @@ def log_create_or_update(sender, instance, created, **kwargs):
 @receiver(post_delete)
 def log_delete(sender, instance, **kwargs):
     if sender._meta.app_label == 'home' and sender.__name__ not in ['Log']:
-        username = instance.deleted_by.username if instance.deleted_by else None
+        username = instance.updated_by.username if instance.updated_by else None
         Log.objects.create(
             action='delete',
             table_name=instance.__class__.__name__,
