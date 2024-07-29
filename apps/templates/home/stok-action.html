@@ -82,7 +82,7 @@
                                       {% for item in Sac %}
                                       <tr>
                                         <td>{{ item.musteri|default:"Veri yok" }}</td>
-                                        <td>{{ item.projekodu.proje_kodu|default:"Veri yok" }}</td>
+                                        <td>{{ item.projekodu|default:"Veri yok" }}</td>
                                         <td>{{ item.stok_kodu|default:"Veri yok" }}</td>
                                         <td>{{ item.adet|default:"Veri yok" }}</td>
                                         <td>{{ item.depo_secimi|default:"Veri yok" }}</td>
@@ -146,7 +146,7 @@
                                     {% for item in Boya %}
                                     <tr>
                                       <td>{{ item.musteri|default:"Veri yok" }}</td>
-                                      <td>{{ item.projekodu.proje_kodu|default:"Veri yok" }}</td>
+                                      <td>{{ item.projekodu|default:"Veri yok" }}</td>
                                       <td>{{ item.stok_kodu|default:"Veri yok" }}</td>
                                       <td>{{ item.adet|default:"Veri yok" }}</td>
                                       <td>{{ item.depo_secimi|default:"Veri yok" }}</td>
@@ -208,7 +208,7 @@
                                   {% for item in Yatak %}
                                   <tr>
                                     <td>{{ item.musteri|default:"Veri yok" }}</td>
-                                    <td>{{ item.projekodu.proje_kodu|default:"Veri yok" }}</td>
+                                    <td>{{ item.projekodu|default:"Veri yok" }}</td>
                                     <td>{{ item.stok_kodu|default:"Veri yok" }}</td>
                                     <td>{{ item.adet|default:"Veri yok" }}</td>
                                     <td>{{ item.depo_secimi|default:"Veri yok" }}</td>
@@ -269,7 +269,7 @@
                                   {% for item in Motor %}
                                   <tr>
                                     <td>{{ item.musteri|default:"Veri yok" }}</td>
-                                    <td>{{ item.projekodu.proje_kodu|default:"Veri yok" }}</td>
+                                    <td>{{ item.projekodu|default:"Veri yok" }}</td>
                                     <td>{{ item.stok_kodu|default:"Veri yok" }}</td>
                                     <td>{{ item.adet|default:"Veri yok" }}</td>
                                     <td>{{ item.depo_secimi|default:"Veri yok" }}</td>
@@ -330,7 +330,7 @@
                                     {% for item in Profil %}
                                     <tr>
                                       <td>{{ item.musteri|default:"Veri yok" }}</td>
-                                      <td>{{ item.projekodu.proje_kodu|default:"Veri yok" }}</td>
+                                      <td>{{ item.projekodu|default:"Veri yok" }}</td>
                                       <td>{{ item.stok_kodu|default:"Veri yok" }}</td>
                                       <td>{{ item.adet|default:"Veri yok" }}</td>
                                       <td>{{ item.depo_secimi|default:"Veri yok" }}</td>
@@ -392,7 +392,7 @@
                                 {% for item in Isleme %}
                                 <tr>
                                   <td>{{ item.musteri|default:"Veri yok" }}</td>
-                                  <td>{{ item.projekodu.proje_kodu|default:"Veri yok" }}</td>
+                                  <td>{{ item.projekodu|default:"Veri yok" }}</td>
                                   <td>{{ item.stok_kodu|default:"Veri yok" }}</td>
                                   <td>{{ item.adet|default:"Veri yok" }}</td>
                                   <td>{{ item.depo_secimi|default:"Veri yok" }}</td>
@@ -453,7 +453,7 @@
                                 {% for item in Teknoloji %}
                                 <tr>
                                   <td>{{ item.musteri|default:"Veri yok" }}</td>
-                                  <td>{{ item.projekodu.proje_kodu|default:"Veri yok" }}</td>
+                                  <td>{{ item.projekodu|default:"Veri yok" }}</td>
                                   <td>{{ item.stok_kodu|default:"Veri yok" }}</td>
                                   <td>{{ item.adet|default:"Veri yok" }}</td>
                                   <td>{{ item.depo_secimi|default:"Veri yok" }}</td>

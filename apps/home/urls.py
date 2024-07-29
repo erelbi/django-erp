@@ -29,6 +29,7 @@ urlpatterns = [
     path('totals-chart-data/', views.get_totals_chart_data, name='totals_chart_data'),
     path('api/consolidated-data/', views.fetch_consolidated_data, name='fetch_consolidated_data'),
     path('logs', views.logshow, name='logs'),
+    path('api/log-data/', views.fetch_log_data, name='fetch_log_data'),
 
 
     # Matches any html file

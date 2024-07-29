@@ -436,10 +436,11 @@ def update_stock(request):
 @login_required(login_url="/login/")
 def depo_actions(request):
     try:
+
         # Veri setlerini alın, select_related kullanarak foreign key ile ilişkili verileri de yükleyin
         sac_data = list(Sac.objects.select_related('projekodu').all().values(
             'musteri',
-            'projekodu__proje_kodu',
+            'projekodu',
             'stok_kodu',
             'adet',
             'depo_secimi',
@@ -450,7 +451,7 @@ def depo_actions(request):
         ))
         boya_data = list(Boya.objects.select_related('projekodu').all().values(
             'musteri',
-            'projekodu__proje_kodu',
+            'projekodu',
             'stok_kodu',
             'adet',
             'depo_secimi',
@@ -461,7 +462,7 @@ def depo_actions(request):
         ))
         yatak_data = list(Yatak.objects.select_related('projekodu').all().values(
             'musteri',
-            'projekodu__proje_kodu',
+            'projekodu',
             'stok_kodu',
             'adet',
             'depo_secimi',
@@ -472,7 +473,7 @@ def depo_actions(request):
         ))
         profil_data = list(Profil.objects.select_related('projekodu').all().values(
             'musteri',
-            'projekodu__proje_kodu',
+            'projekodu',
             'stok_kodu',
             'adet',
             'depo_secimi',
@@ -483,7 +484,7 @@ def depo_actions(request):
         ))
         isleme_data = list(Isleme.objects.select_related('projekodu').all().values(
             'musteri',
-            'projekodu__proje_kodu',
+            'projekodu',
             'stok_kodu',
             'adet',
             'depo_secimi',
@@ -494,7 +495,7 @@ def depo_actions(request):
         ))
         motor_data = list(MotorReduktor.objects.select_related('projekodu').all().values(
             'musteri',
-            'projekodu__proje_kodu',
+            'projekodu',
             'stok_kodu',
             'adet',
             'depo_secimi',
@@ -505,7 +506,7 @@ def depo_actions(request):
         ))
         teknoloji_data = list(TeknolojikAlim.objects.select_related('projekodu').all().values(
             'musteri',
-            'projekodu__proje_kodu',
+            'projekodu',
             'stok_kodu',
             'adet',
             'depo_secimi',
@@ -531,9 +532,7 @@ def depo_actions(request):
 
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}")
-    
-    except Exception as e:
-        return HttpResponse(f"An error occurred: {e}")
+
 def get_chart_data_action(request):
     sac_count = Sac.objects.count()
     boya_count = Boya.objects.count()
@@ -598,16 +597,27 @@ def get_totals_chart_data(request):
     
     return JsonResponse(data)
 
-
+@csrf_exempt
 @login_required(login_url="/login/")
 def logshow(request):
-    Logs = Log.objects.all()
-  
        
-    context = {'segment': 'index','log':Logs}
+    context = {'segment': 'index'}
+  
    
     html_template = loader.get_template('home/action-logs.html')
-    return HttpResponse(html_template.render(context, request))
+    return HttpResponse(html_template.render(context, request,))
+
+@csrf_exempt
+@login_required(login_url="/login/")
+def fetch_log_data(request):
+  data = list(Log.objects.select_related('id').all().values(
+    'action',
+    'table_name',
+    'username',
+    'timestamp'
+    ))
+
+  return JsonResponse(data, safe=False)
 
 
 
